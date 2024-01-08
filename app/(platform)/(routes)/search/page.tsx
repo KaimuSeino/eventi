@@ -4,7 +4,8 @@ import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { SearchInput } from "@/components/SearchInput";
 import { getEvents } from "@/actions/get-events";
-import EventsList from "@/components/EventsList";
+import EventsList from "./_components/events-list";
+
 
 interface SearchPageProps {
   searchParams: {
