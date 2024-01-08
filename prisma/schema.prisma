@@ -1,0 +1,106 @@
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+model Event {
+  id          String    @id @default(uuid())
+  userId      String
+  title       String    @db.Text
+  description String?   @db.Text
+  imageUrl    String?   @db.Text
+  // price Float? 
+  detail      String?   @db.Text
+  datetime    DateTime? @db.Date
+
+  isPublished Boolean @default(false)
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  attachments Attachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Comment     Comment[]
+  Rating      Rating[]
+  UserJoining UserJoining[]
+
+  @@index([categoryId])
+  @@fulltext([title])
+}
+
+model Category {
+  id    String  @id @default(uuid())
+  name  String
+  event Event[]
+}
+
+model Attachment {
+  id   String @id @default(uuid())
+  name String
+  url  String @db.Text
+
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([eventId])
+}
+
+model Comment {
+  id           String  @id @default(uuid())
+  content      String  @db.Text
+  eventId      String
+  event        Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId       String
+  userImage    String? @db.Text
+  emailAddress String? @db.Text
+  userName     String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([eventId])
+}
+
+model UserJoining {
+  id     String @id @default(uuid())
+  userId String
+
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  userImage    String? @db.Text
+  emailAddress String? @db.Text
+
+  isCompleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([eventId])
+}
+
+model Rating {
+  id        String   @id @default(uuid())
+  score     Int // 1から5などの評価スコア
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  userId String
+
+  @@index([eventId])
+}
