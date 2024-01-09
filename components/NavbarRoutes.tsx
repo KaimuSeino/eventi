@@ -13,6 +13,9 @@ const NavbarRoutes = () => {
   const { userId } = useAuth();
   const pathname = usePathname();
 
+  console.log(userId)
+  console.log(isHost(userId))
+
   const isHostPage = pathname?.startsWith("/host");
   const isGuestPage = pathname?.startsWith("/guest");
   const isSearchPage = pathname === "/search"
