@@ -4,8 +4,10 @@ import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { ConfettiProvider } from '@/components/providers/ConfettiProvider'
 import { siteConfig } from '@/config/site'
+import { localization } from '@/lib/auth'
 
 const inter = Inter({ subsets: ['latin'] })
+
 
 export const metadata: Metadata = {
   title: {
@@ -27,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider localization={localization}>
       <html lang="ja">
         <body className={inter.className}>
           <ConfettiProvider />
