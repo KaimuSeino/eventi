@@ -84,14 +84,17 @@ const EventIdPage = async ({
                         参加完了
                       </div>
                       {/* userHasAnswered が true かつ allSurveysCompleted が false の場合のみ、MYアンケート編集ボタンを表示 */}
-                      {userHasAnswered && !allSurveysCompleted ? (
+                      {!userHasAnswered ? (
+                        <CreateUserSurveyFormButton eventId={params.eventId} survey={surveys} />
+                      ) : !allSurveysCompleted ? (
                         <Link href={`/events/${params.eventId}/survey`}>
                           <Button className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition">
                             MYアンケート編集
                           </Button>
                         </Link>
                       ) : (
-                        <CreateUserSurveyFormButton eventId={params.eventId} survey={surveys} />
+                        <>
+                        </>
                       )}
                     </>
                   ) : (

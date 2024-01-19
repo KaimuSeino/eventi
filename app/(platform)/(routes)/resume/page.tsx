@@ -31,8 +31,6 @@ const UserResumePage = async () => {
     ) || false
   }));
 
-  console.log(isSurveyCompleted);
-
   return (
     <div className="flex flex-col max-w-4xl mx-auto pb-20">
       <div className="p-4">
