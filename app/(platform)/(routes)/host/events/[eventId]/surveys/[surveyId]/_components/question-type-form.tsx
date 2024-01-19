@@ -4,33 +4,32 @@ import * as z from "zod"
 import axios from "axios"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Pencil } from "lucide-react"
+import { Check, Pencil } from "lucide-react"
 import { useState } from "react"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
+import { Survey } from "@prisma/client"
+import { Checkbox } from "@/components/ui/checkbox"
 import { cn } from "@/lib/utils"
-import { Textarea } from "@/components/ui/textarea"
-import { Event } from "@prisma/client"
-import { DatePicker } from "@/components/ui/datepicker"
-import { format } from "date-fns";
 
-interface DateFormProps {
-  initialData: Event
+interface QuestionTypeFormProps {
+  initialData: Survey
   eventId: string
+  surveyId: string
 }
 
 const formSchema = z.object({
-  datetime: z.date({
-    required_error: "日付を選んでください"
-  })
+  type: z.boolean().default(false)
 })
 
-const DateForm = ({
+const QuestionTypeForm = ({
   initialData,
-  eventId
-}: DateFormProps) => {
+  eventId,
+  surveyId
+}: QuestionTypeFormProps) => {
 
   const router = useRouter()
 
@@ -40,18 +39,15 @@ const DateForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      datetime: initialData?.datetime || undefined
+      type: !!initialData.type
     }
-  })
+  });
 
   const { isSubmitting, isValid } = form.formState
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const formattedDate = format(values.datetime, "yyyy-MM-dd'T'00:00:00.000'Z'");
-
     try {
-      await axios.patch(`/api/events/${eventId}`, { datetime: formattedDate })
-      console.log(values)
+      await axios.patch(`/api/events/${eventId}/surveys/${surveyId}`, values)
       toast.success("更新されました！")
       toggleEdit()
       router.refresh()
@@ -63,7 +59,7 @@ const DateForm = ({
   return (
     <div className="mt-4 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        日程選択
+        質問タイプの編集
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
             <>キャンセル</>
@@ -76,12 +72,16 @@ const DateForm = ({
         </Button>
       </div>
       {!isEditing && (
-        <p className={cn(
+        <div className={cn(
           "text-sm mt-2",
-          !initialData.datetime && "text-slate-500 italic"
+          !initialData.type && "text-slate-500 italic"
         )}>
-          {initialData.datetime ? format(initialData.datetime, "yyyy-MM-dd") : "日付を選択していません"}
-        </p>
+          {initialData.type ? (
+            <>これは選択アンケートです</>
+          ) : (
+            <>これは選択アンケートではありません</>
+          )}
+        </div>
       )}
       {isEditing && (
         <Form {...form}>
@@ -91,18 +91,20 @@ const DateForm = ({
           >
             <FormField
               control={form.control}
-              name="datetime"
+              name="type"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <FormControl>
-                    <DatePicker
-                      value={field.value}
-                      onChange={(newValue) => {
-                        field.onChange(newValue)
-                      }}
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <div className="space-y-1 leading-none">
+                    <FormDescription>
+                      選択アンケートに切り替える
+                    </FormDescription>
+                  </div>
                 </FormItem>
               )}
             />
@@ -121,4 +123,4 @@ const DateForm = ({
   );
 }
 
-export default DateForm;
+export default QuestionTypeForm;

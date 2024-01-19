@@ -1,7 +1,7 @@
 import { IconBadge } from "@/components/IconBadge";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
-import { LayoutDashboard, ListChecks } from "lucide-react";
+import { FileCheck, LayoutDashboard, ListChecks } from "lucide-react";
 import { redirect } from "next/navigation";
 import TitleForm from "./_components/TitleForm";
 import DescriptionForm from "./_components/DescriptionForm";
@@ -11,6 +11,7 @@ import DetailForm from "./_components/DetailForm";
 import { Actions } from "./_components/Actions";
 import { Banner } from "@/components/banner";
 import DateForm from "./_components/DateForm";
+import SurveyForm from "./_components/SurveyForm";
 
 const EventIdPage = async ({
   params
@@ -26,7 +27,15 @@ const EventIdPage = async ({
 
   const event = await db.event.findUnique({
     where: {
-      id: params.eventId
+      id: params.eventId,
+      userId
+    },
+    include: {
+      surveys: {
+        orderBy: {
+          position: "asc"
+        }
+      }
     }
   })
 
@@ -46,7 +55,8 @@ const EventIdPage = async ({
     event.imageUrl,
     event.categoryId,
     event.detail,
-    event.datetime
+    event.datetime,
+    event.surveys
   ]
 
   const totalFields = requiredFields.length;
@@ -113,6 +123,16 @@ const EventIdPage = async ({
                 value: category.id,
               }))}
             />
+            {/* 日程フォーム */}
+            <DateForm
+              initialData={event}
+              eventId={event.id}
+            />
+            {/* アンケート編集フォーム */}
+            <SurveyForm
+              initialData={event}
+              eventId={event.id}
+            />
           </div>
           <div className="space-y-6">
             <div>
@@ -123,10 +143,6 @@ const EventIdPage = async ({
                 </h2>
               </div>
               <DetailForm
-                initialData={event}
-                eventId={event.id}
-              />
-              <DateForm
                 initialData={event}
                 eventId={event.id}
               />

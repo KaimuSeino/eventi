@@ -8,6 +8,12 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import CommentForm from "./_components/comment-form";
 import EventJoiningButton from "./_components/event-joining-button";
+import { getJoining } from "@/actions/get-joining";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { getSurvey } from "@/actions/get-surveys";
+import CreateUserSurveyFormButton from "./_components/create-user-survey-form-button";
+import { getUserSurveys } from "@/actions/get-user-surveys";
 
 
 const EventIdPage = async ({
@@ -25,6 +31,26 @@ const EventIdPage = async ({
   const event = await getEvent({
     eventId: params.eventId
   })
+
+  const joining = await getJoining({
+    eventId: params.eventId,
+    userId: userId
+  })
+
+  const surveys = await getSurvey({
+    eventId: params.eventId
+  })
+
+  const userSurveyWithAnswers = await getUserSurveys({
+    eventId: params.eventId,
+    userId: userId
+  })
+
+  const userHasAnswered = userSurveyWithAnswers?.some(survey => survey.userAnswer && survey.userAnswer.length > 0);
+
+  const allSurveysCompleted = userSurveyWithAnswers?.every(survey =>
+    survey.userAnswer?.every(answer => answer.isCompleted)
+  );
 
   const date = event?.datetime?.toLocaleDateString("ja-JP");
 
@@ -49,7 +75,31 @@ const EventIdPage = async ({
             <h2 className="text-2xl font-semibold mb-2">
               {event.title}
             </h2>
-            <EventJoiningButton eventId={event.id} userId={userId} />
+            <div>
+              {joining ? (
+                <div className="flex items-center gap-x-2">
+                  {joining.isCompleted === true ? (
+                    <>
+                      <div className="bg-green-500 text-white text-xs px-3 py-1 rounded">
+                        参加完了
+                      </div>
+                      {/* userHasAnswered が true かつ allSurveysCompleted が false の場合のみ、MYアンケート編集ボタンを表示 */}
+                      {userHasAnswered && !allSurveysCompleted && (
+                        <Link href={`/events/${params.eventId}/survey`}>
+                          <Button className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition">
+                            MYアンケート編集
+                          </Button>
+                        </Link>
+                      )}
+                    </>
+                  ) : (
+                    <div className="bg-yellow-500 text-white text-xs px-3 py-1 rounded">
+                      参加中
+                    </div>
+                  )}
+                </div>
+              ) : <EventJoiningButton eventId={event.id} userId={userId} />}
+            </div>
           </div>
           <div className="px-4">
             <p>
@@ -73,13 +123,13 @@ const EventIdPage = async ({
           <div>
             <Preview value={event.detail!} />
           </div>
-        </div>
+        </div >
         <Separator />
         <h2 className="p-4 text-lg font-bold">コメント</h2>
         <div className="px-4">
           <CommentForm eventId={event.id} />
         </div>
-      </div>
+      </div >
     );
   } else {
     // event が null の場合の処理（例: メッセージを表示する）

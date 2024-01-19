@@ -36,7 +36,7 @@ export const ComfirmModal = ({
         <AlertDialogFooter>
           <AlertDialogCancel>キャンセル</AlertDialogCancel>
           <AlertDialogAction onClick={onComfirm}>
-            イベントを消去
+            消去
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

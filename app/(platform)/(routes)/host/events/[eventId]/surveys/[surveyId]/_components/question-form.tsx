@@ -4,33 +4,31 @@ import * as z from "zod"
 import axios from "axios"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Pencil } from "lucide-react"
 import { useState } from "react"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Textarea } from "@/components/ui/textarea"
-import { Event } from "@prisma/client"
-import { DatePicker } from "@/components/ui/datepicker"
-import { format } from "date-fns";
 
-interface DateFormProps {
-  initialData: Event
+interface QuestionFormProps {
+  initialData: {
+    question: string
+  }
   eventId: string
+  surveyId: string
 }
 
 const formSchema = z.object({
-  datetime: z.date({
-    required_error: "日付を選んでください"
-  })
+  question: z.string().min(1)
 })
 
-const DateForm = ({
+const QuestionForm = ({
   initialData,
-  eventId
-}: DateFormProps) => {
+  eventId,
+  surveyId
+}: QuestionFormProps) => {
 
   const router = useRouter()
 
@@ -39,19 +37,14 @@ const DateForm = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      datetime: initialData?.datetime || undefined
-    }
+    defaultValues: initialData
   })
 
   const { isSubmitting, isValid } = form.formState
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const formattedDate = format(values.datetime, "yyyy-MM-dd'T'00:00:00.000'Z'");
-
     try {
-      await axios.patch(`/api/events/${eventId}`, { datetime: formattedDate })
-      console.log(values)
+      await axios.patch(`/api/events/${eventId}/surveys/${surveyId}`, values)
       toast.success("更新されました！")
       toggleEdit()
       router.refresh()
@@ -63,7 +56,7 @@ const DateForm = ({
   return (
     <div className="mt-4 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        日程選択
+        質問内容
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
             <>キャンセル</>
@@ -76,11 +69,8 @@ const DateForm = ({
         </Button>
       </div>
       {!isEditing && (
-        <p className={cn(
-          "text-sm mt-2",
-          !initialData.datetime && "text-slate-500 italic"
-        )}>
-          {initialData.datetime ? format(initialData.datetime, "yyyy-MM-dd") : "日付を選択していません"}
+        <p className="text-sm mt-2">
+          {initialData.question}
         </p>
       )}
       {isEditing && (
@@ -91,15 +81,14 @@ const DateForm = ({
           >
             <FormField
               control={form.control}
-              name="datetime"
+              name="question"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <DatePicker
-                      value={field.value}
-                      onChange={(newValue) => {
-                        field.onChange(newValue)
-                      }}
+                    <Input
+                      disabled={isSubmitting}
+                      placeholder="質問内容を記入してください"
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -121,4 +110,4 @@ const DateForm = ({
   );
 }
 
-export default DateForm;
+export default QuestionForm;

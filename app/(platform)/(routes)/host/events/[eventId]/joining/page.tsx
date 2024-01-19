@@ -11,7 +11,7 @@ const JoiningPage = async ({
   const { userId } = auth();
 
   if (!userId) {
-    return redirect("/")
+    return redirect("/");
   }
 
   const event = await db.event.findUnique({

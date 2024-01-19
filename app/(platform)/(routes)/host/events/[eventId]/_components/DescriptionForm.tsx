@@ -30,7 +30,7 @@ const DescriptionForm = ({
   eventId
 }: DescriptionFormProps) => {
 
-  const router = useRouter()
+  const router = useRouter();
 
   const [isEditing, setIsEditing] = useState(false)
   const toggleEdit = () => setIsEditing((current) => !current);
@@ -56,7 +56,7 @@ const DescriptionForm = ({
   }
 
   return (
-    <div className="mt-4 boredr bg-slate-100 rounded-md p-4">
+    <div className="mt-4 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
         概要文
         <Button onClick={toggleEdit} variant="ghost">

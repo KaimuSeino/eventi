@@ -24,14 +24,12 @@ model Event {
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
 
-  attachments Attachment[]
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   Comment     Comment[]
-  Rating      Rating[]
   UserJoining UserJoining[]
+  surveys     Survey[]
 
   @@index([categoryId])
   @@fulltext([title])
@@ -41,20 +39,6 @@ model Category {
   id    String  @id @default(uuid())
   name  String
   event Event[]
-}
-
-model Attachment {
-  id   String @id @default(uuid())
-  name String
-  url  String @db.Text
-
-  eventId String
-  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([eventId])
 }
 
 model Comment {
@@ -91,16 +75,53 @@ model UserJoining {
   @@index([eventId])
 }
 
-model Rating {
-  id        String   @id @default(uuid())
-  score     Int // 1から5などの評価スコア
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Survey {
+  id          String  @id @default(uuid())
+  question    String
+  type        Boolean @default(false)
+  position    Int
+  isCompleted Boolean @default(false)
 
   eventId String
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-  userId String
+  userAnswer UserAnswer[]
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  selectQuestions SelectQuestion[]
 
   @@index([eventId])
+}
+
+model SelectQuestion {
+  id       String @id @default(uuid())
+  question String
+
+  position Int
+
+  surveyId String
+  survey   Survey @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([surveyId])
+}
+
+model UserAnswer {
+  id     String @id @default(uuid())
+  userId String
+
+  isCreated    Boolean @default(false)
+  textAnswer   String?
+  selectAnswer Int?
+
+  isCompleted Boolean @default(false)
+
+  surveyId String
+  survey   Survey @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, surveyId])
+  @@index([surveyId])
 }

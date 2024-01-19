@@ -1,25 +1,27 @@
+// actions/get-joinings.ts
 import { db } from "@/lib/db";
 
-type GetJoiningsProps = {
+interface GetJoiningProps {
   eventId: string;
+  userId: string;
 }
 
-export const getJoinings = async ({
-  eventId
-}: GetJoiningsProps) => {
+export const getJoining = async ({
+  eventId,
+  userId,
+}: GetJoiningProps) => {
   try {
-    const joinings = await db.userJoining.findMany({
+    // 特定のイベントに対する特定のユーザーの参加状況を取得
+    const joining = await db.userJoining.findFirst({
       where: {
-        eventId: eventId
-      },
-      orderBy: {
-        createdAt: "desc"
+        eventId: eventId,
+        userId: userId
       }
-    })
+    });
 
-    return joinings
+    return joining;
   } catch (error) {
-    console.log("[GET_JOININGS]", error)
-    return null
+    console.log("[GET_JOININGS]", error);
+    return null;
   }
-}
+};

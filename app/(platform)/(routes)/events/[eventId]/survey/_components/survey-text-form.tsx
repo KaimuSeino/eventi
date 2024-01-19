@@ -1,73 +1,72 @@
 "use client"
 
-import * as z from "zod"
-import axios from "axios"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
-import { Button } from "@/components/ui/button"
-import { Pencil } from "lucide-react"
-import { useState } from "react"
-import toast from "react-hot-toast"
-import { useRouter } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Event } from "@prisma/client"
-import { Combobox } from "@/components/ui/combobox"
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { Pencil } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
+import { Textarea } from "@/components/ui/textarea";
 
-interface CategoryFormProps {
-  initialData: Event;
+interface SurveyTextFormProps {
+  initialData: string;
   eventId: string;
-  options: { label: string; value: string; }[];
+  surveyId: string;
+  question: string;
+  // initialData: Survey;
 }
 
+
 const formSchema = z.object({
-  categoryId: z.string().min(1),
+  textAnswer: z.string().min(1)
 })
 
-const CategoryForm = ({
-  initialData,
+export const SurveyTextForm = ({
   eventId,
-  options,
-}: CategoryFormProps) => {
+  surveyId,
+  initialData,
+  question,
+}: SurveyTextFormProps) => {
+  const router = useRouter();
 
-  const router = useRouter()
-
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      categoryId: initialData?.categoryId || ""
-    }
+    defaultValues: { textAnswer: initialData }
   })
 
   const { isSubmitting, isValid } = form.formState
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/events/${eventId}`, values)
-      toast.success("更新されました！")
+      await axios.patch(`/api/events/${eventId}/surveys/create`, { values, surveyId });
+      toast.success("保存されました！");
       toggleEdit()
       router.refresh()
     } catch (error) {
-      toast.error("何か問題起きちゃった！！")
+      console.log("[SURVEY_SUBMINT]", error);
+      toast.error("問題が発生しました");
     }
   }
-
-  const selectedOption = options.find((option) => option.value === initialData.categoryId)
 
   return (
     <div className="mt-4 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        カテゴリー
+        {question}
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
             <>キャンセル</>
           ) : (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              編集
+              編集する
             </>
           )}
         </Button>
@@ -75,9 +74,9 @@ const CategoryForm = ({
       {!isEditing && (
         <p className={cn(
           "text-sm mt-2",
-          !initialData.categoryId && "text-slate-500 italic"
+          !initialData && "text-slate-500 italic"
         )}>
-          {selectedOption?.label || "カテゴリーがありません"}
+          {initialData || "回答がありません"}
         </p>
       )}
       {isEditing && (
@@ -88,17 +87,16 @@ const CategoryForm = ({
           >
             <FormField
               control={form.control}
-              name="categoryId"
+              name="textAnswer"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Combobox
-                      options={options}
-                      value={field.value}
-                      onChange={(newValue) => field.onChange(newValue)}
+                    <Textarea
+                      disabled={isSubmitting}
+                      placeholder="質問文を取得して表示させたい"
+                      {...field}
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -114,7 +112,5 @@ const CategoryForm = ({
         </Form>
       )}
     </div>
-  );
+  )
 }
-
-export default CategoryForm;

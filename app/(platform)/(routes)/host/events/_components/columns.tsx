@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Event } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MessageCircle, MoreHorizontal, Pencil, UserCheck } from "lucide-react"
+import { ArrowUpDown, FileCheck, MessageCircle, MoreHorizontal, Pencil, UserCheck } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -101,7 +101,7 @@ export const columns: ColumnDef<Event>[] = [
             <Link href={`/host/events/${id}`}>
               <DropdownMenuItem>
                 <Pencil className="h-4 w-4 mr-2" />
-                編集
+                イベント編集
               </DropdownMenuItem>
             </Link>
             <Link href={`/host/events/${id}/comments`}>
