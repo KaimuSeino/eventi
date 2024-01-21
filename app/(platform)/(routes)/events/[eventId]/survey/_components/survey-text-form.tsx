@@ -93,7 +93,7 @@ export const SurveyTextForm = ({
                   <FormControl>
                     <Textarea
                       disabled={isSubmitting}
-                      placeholder="質問文を取得して表示させたい"
+                      placeholder="記入して保存してください。"
                       {...field}
                     />
                   </FormControl>
@@ -107,6 +107,9 @@ export const SurveyTextForm = ({
               >
                 保存
               </Button>
+              <span className="text-sm font-thin text-slate-400">
+                保存ボタンを押さないと回答が保存されません
+              </span>
             </div>
           </form>
         </Form>

@@ -6,6 +6,7 @@ import SurveySelectForm from "./_components/survey-select-form";
 import { getSurvey } from "@/actions/get-surveys";
 import { getUserSurveys } from "@/actions/get-user-surveys";
 import SurveyCompletedButton from "./_components/survey-completed.button";
+import Image from "next/image";
 
 const SurveyPage = async ({
   params
@@ -37,7 +38,12 @@ const SurveyPage = async ({
         <div className="p-4">
           <div className="relative aspect-[4/1]">
             <div className="absolute inset-0 flex items-center justify-center bg-slate-800 text-white">
-              ここに就活で使えるとかの機能を説明する画像が欲しい！
+              <Image
+                fill
+                className="object-cover"
+                alt="surveyImage"
+                src="/survey.png"
+              />
             </div>
           </div>
         </div>

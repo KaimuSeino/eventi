@@ -15,7 +15,6 @@ import { getSurvey } from "@/actions/get-surveys";
 import CreateUserSurveyFormButton from "./_components/create-user-survey-form-button";
 import { getUserSurveys } from "@/actions/get-user-surveys";
 
-
 const EventIdPage = async ({
   params
 }:

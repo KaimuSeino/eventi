@@ -98,6 +98,9 @@ export const SurveySelectForm = ({
             >
               保存
             </Button>
+            <span className="text-sm font-thin text-slate-400">
+              保存ボタンを押さないと回答が保存されません
+            </span>
           </div>
         </form>
       </Form>
