@@ -36,13 +36,23 @@ const SurveyPage = async ({
     return (
       <div className="flex flex-col max-w-4xl mx-auto pb-20">
         <div className="p-4">
-          <div className="relative aspect-[4/1]">
+          <div className="hidden md:flex relative aspect-[4/1]">
             <div className="absolute inset-0 flex items-center justify-center bg-slate-800 text-white">
               <Image
                 fill
                 className="object-cover"
                 alt="surveyImage"
                 src="/survey.png"
+              />
+            </div>
+          </div>
+          <div className="md:hidden relative aspect-video">
+            <div className="absolute inset-0 flex items-center justify-center bg-slate-800">
+              <Image
+                fill
+                className="object-cover"
+                alt="surveylarge"
+                src="/surveylarge.png"
               />
             </div>
           </div>
