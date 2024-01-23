@@ -76,6 +76,7 @@ const SurveyPage = async ({
                     surveyId={survey.id}
                     eventId={params.eventId}
                     question={survey.question}
+                    eventiResume={survey.eventiResume}
                     initialData={userAnswer.textAnswer!}
                   />
                 ) : (

@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { SurveyAction } from "./_components/survey-actions";
+import QuestionResumeForm from "./_components/question-resume-form";
 
 const SurveyIdPage = async ({
   params
@@ -95,10 +96,15 @@ const SurveyIdPage = async ({
           <div className="flex items-center gap-x-2">
             <IconBadge icon={Eye} />
             <h2 className="text-xl">
-              テキストまたは選択フォーム
+              アンケートタイプの編集
             </h2>
           </div>
           <QuestionTypeForm
+            initialData={survey}
+            eventId={params.eventId}
+            surveyId={params.surveyId}
+          />
+          <QuestionResumeForm
             initialData={survey}
             eventId={params.eventId}
             surveyId={params.surveyId}

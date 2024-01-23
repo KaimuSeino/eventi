@@ -11,6 +11,7 @@ import {
 } from "@hello-pangea/dnd"
 import { Grid, Grip, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 interface SurveysListProps {
   items: Survey[];
@@ -84,16 +85,26 @@ export const SurveysList = ({
                     >
                       <Grip className="h-5 w-5" />
                     </div>
+                    {survey.eventiResume ? (
+                      <Image
+                        height={20}
+                        width={20}
+                        alt="logo"
+                        src="/logo.png"
+                      />
+                    ) : (
+                      ""
+                    )}
                     {survey.position}：
                     {survey.question}
                     <div className="ml-auto pr-2 flex items-center gap-x-2">
                       {survey.type ? (
                         <Badge>
-                          選択アンケート
+                          S
                         </Badge>
                       ) : (
                         <Badge>
-                          テキストアンケート
+                          T
                         </Badge>
                       )}
                       <Pencil
@@ -105,6 +116,7 @@ export const SurveysList = ({
                 )}
               </Draggable>
             ))}
+            {provided.placeholder}
           </div>
         )}
       </Droppable>

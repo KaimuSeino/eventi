@@ -1,37 +1,198 @@
 "use client"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { User } from "@prisma/client";
+import axios from "axios";
 import { Pencil } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { z } from "zod";
 
-const UserBasicInfo = () => {
+interface UserBasicInfoProps {
+  user: User | null;
+}
+
+const formSchema = z.object({
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.string().min(1),
+})
+
+const UserBasicInfo = ({
+  user
+}: UserBasicInfoProps) => {
+  const router = useRouter();
 
   const [isEditing, setIsEditing] = useState(false)
   const toggleEdit = () => setIsEditing((current) => !current);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema)
+  })
+
+  const { isSubmitting, isValid } = form.formState
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await axios.patch(`/api/user`, values);
+      toast.success("プロフィールが更新されました！");
+      toggleEdit()
+      router.refresh()
+    } catch (error) {
+      console.log("[USER]", error);
+      toast.error("問題が発生しました");
+    }
+  }
+
+  const createUserProfile = async () => {
+    try {
+      await axios.post(`/api/user`);
+      toast.success("プロフィールが作成されました！");
+      router.refresh();
+
+    } catch (error) {
+      toast.error('問題が発生しました');
+    }
+  };
+
+
   return (
     <>
-      <p>基本情報</p>
+      <p className="text-lg font-extrabold">基本情報</p>
       <div className="mt-4 border bg-slate-100 rounded-md p-4">
         <div className="font-medium flex items-center justify-between">
           性名・メールアドレス
-          <Button onClick={toggleEdit} variant="ghost">
-            {isEditing ? (
-              <>キャンセル</>
-            ) : (
-              <>
-                <Pencil className="h-4 w-4 mr-2" />
-                編集
-              </>
-            )}
-          </Button>
+          {user ? (
+            <div>
+              <Button onClick={toggleEdit} variant="ghost">
+                {isEditing ? (
+                  <>キャンセル</>
+                ) : (
+                  <>
+                    <Pencil className="h-4 w-4 mr-2" />
+                    編集
+                  </>
+                )}
+              </Button>
+            </div>
+          ) : (
+            <div>
+              <Button onClick={createUserProfile} variant="ghost">
+                プロフィール作成
+              </Button>
+            </div>
+          )}
         </div>
         <Separator className="mb-4" />
         {!isEditing && (
-          <div className="text-2xl font-bold flex justify-center items-center">
-            Coming Soon
+          <div className="font-medium md:grid md:grid-cols-3 md:gap-4 md:items-center">
+            <div className="flex justify-center my-4 md:my-0">
+              <Avatar>
+                <AvatarImage src={user?.image!} />
+              </Avatar>
+            </div>
+            <div className="flex flex-col gap-y-2">
+              {/* 名前などの基本情報 */}
+              <div>
+                性：
+                <span className="font-bold">
+                  {!user?.lastName ? "未入力" : user.lastName}
+                </span>
+              </div>
+              <div>
+                名：
+                <span className="font-bold">
+                  {!user?.firstName ? "未入力" : user.firstName}
+                </span>
+              </div>
+            </div>
+            <div className="my-4 md:my-0">
+              メールアドレス：
+              <span>
+                {!user?.email ? "未入力" : user.email}
+              </span>
+            </div>
           </div>
+        )}
+        {isEditing && (
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 mt-4"
+            >
+              <div className="flex items-center justify-around">
+                <div className="w-full p-2">
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center">
+                        <FormLabel>性：</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isSubmitting}
+                            placeholder="性"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="w-full p-2">
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center">
+                        <FormLabel>名：</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isSubmitting}
+                            placeholder="名"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="p-2">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center gap-y-2">
+                      <FormLabel className="w-full">メールアドレス：</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={isSubmitting}
+                          placeholder="eventi@example.com"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex items-center gap-x-2">
+                <Button
+                  disabled={!isValid || isSubmitting}
+                  type="submit"
+                >
+                  保存
+                </Button>
+              </div>
+            </form>
+          </Form>
         )}
       </div>
     </>

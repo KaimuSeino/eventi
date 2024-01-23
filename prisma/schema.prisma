@@ -9,6 +9,16 @@ generator client {
   previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
+model User {
+  userId    String   @id
+  firstName String?
+  lastName  String?
+  email     String?  @unique
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Event {
   id          String    @id @default(uuid())
   userId      String
@@ -76,11 +86,12 @@ model UserJoining {
 }
 
 model Survey {
-  id          String  @id @default(uuid())
-  question    String
-  type        Boolean @default(false)
-  position    Int
-  isCompleted Boolean @default(false)
+  id           String  @id @default(uuid())
+  question     String
+  type         Boolean @default(false)
+  eventiResume Boolean @default(false)
+  position     Int
+  isCompleted  Boolean @default(false)
 
   eventId String
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)

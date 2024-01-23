@@ -12,12 +12,14 @@ import toast from "react-hot-toast";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
 
 interface SurveyTextFormProps {
   initialData: string;
   eventId: string;
   surveyId: string;
   question: string;
+  eventiResume: boolean;
   // initialData: Survey;
 }
 
@@ -31,6 +33,7 @@ export const SurveyTextForm = ({
   surveyId,
   initialData,
   question,
+  eventiResume,
 }: SurveyTextFormProps) => {
   const router = useRouter();
 
@@ -59,7 +62,17 @@ export const SurveyTextForm = ({
   return (
     <div className="mt-4 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        {question}
+        <div className="flex items-center gap-x-2">
+          {eventiResume && (
+            <Image
+              height={20}
+              width={20}
+              alt="logo"
+              src="/logo.png"
+            />
+          )}
+          {question}
+        </div>
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
             <>キャンセル</>
