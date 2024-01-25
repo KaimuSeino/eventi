@@ -11,6 +11,8 @@ export async function POST(
     const user = await currentUser();
     const { eventId } = params;
 
+
+
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -32,6 +34,8 @@ export async function POST(
       data: {
         userId: userId,
         eventId: eventId,
+        firstName: user?.firstName,
+        lastName: user?.lastName,
         userImage: user?.imageUrl,
         emailAddress: user?.emailAddresses[0].emailAddress
       },

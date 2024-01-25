@@ -18,7 +18,7 @@ export const JoiningList = async ({
   }
 
   const joinings = await getJoinings({
-    eventId: eventId
+    eventId: eventId,
   })
 
   return (
@@ -38,6 +38,7 @@ export const JoiningList = async ({
                     <AvatarImage src={joining.userImage || "/path/to/default/avatar.jpg"} />
                   </Avatar>
                   <div className="ml-4">
+                    <p>{joining.lastName} {joining.firstName}</p>
                     <div>{joining.emailAddress}</div>
                   </div>
                 </div>

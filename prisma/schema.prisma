@@ -74,6 +74,8 @@ model UserJoining {
   eventId String
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
+  firstName    String?
+  lastName     String?
   userImage    String? @db.Text
   emailAddress String? @db.Text
 

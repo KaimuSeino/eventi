@@ -5,7 +5,7 @@ type GetJoiningsProps = {
 }
 
 export const getJoinings = async ({
-  eventId
+  eventId,
 }: GetJoiningsProps) => {
   try {
     const joinings = await db.userJoining.findMany({

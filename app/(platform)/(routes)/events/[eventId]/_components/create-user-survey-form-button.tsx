@@ -1,16 +1,11 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectQuestion, Survey, UserAnswer } from "@prisma/client";
+import { SelectQuestion, Survey } from "@prisma/client";
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { z } from "zod";
 
 type SurveyWithSelectQuestion = Survey & {
   selectQuestions: SelectQuestion[] | null;
@@ -18,7 +13,7 @@ type SurveyWithSelectQuestion = Survey & {
 
 interface CreateUserSurveyFormButtonProps {
   eventId: string;
-  survey: SurveyWithSelectQuestion[] | null
+  survey: SurveyWithSelectQuestion[] | null;
 }
 
 
@@ -26,9 +21,9 @@ const CreateUserSurveyFormButton = ({
   eventId,
 }: CreateUserSurveyFormButtonProps) => {
 
-  const router = useRouter()
+  const router = useRouter();
 
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] = useState(false);
 
 
   const onSubmit = async () => {
