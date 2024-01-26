@@ -27,7 +27,7 @@ const CreateUserSurveyFormButton = ({
 
 
   const onSubmit = async () => {
-    setIsEditing(true)
+    setIsEditing(true);
     try {
       await axios.post(`/api/events/${eventId}/surveys/create`)
       toast.success("フォームに移動しています")

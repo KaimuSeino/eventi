@@ -1,8 +1,9 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+### Eventi
 
-## Getting Started
 
-First, run the development server:
+## What is Eventi
+
+Eventi is the platform for active students
 
 ```bash
 npm run dev
