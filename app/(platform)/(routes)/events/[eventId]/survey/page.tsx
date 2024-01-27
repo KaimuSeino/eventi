@@ -63,6 +63,17 @@ const SurveyPage = async ({
           </h2>
           {/* アンケートフォーム */}
         </div>
+        <p className="px-4 flex items-center gap-x-2">
+          <Image
+            height={20}
+            width={20}
+            alt="logo"
+            src="/logo.png"
+          />
+          <span className="text-sm">
+            このロゴがあるアンケートはEventi履歴書として保存されます。
+          </span>
+        </p>
         <div className="p-4">
           {surveys?.map((survey) => {
             // 特定のサーベイに対応するユーザー回答を検索

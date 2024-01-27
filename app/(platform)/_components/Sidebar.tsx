@@ -6,7 +6,7 @@ const Sidebar = () => {
     <div className="h-full border-r flex flex-col overflow-y-auto bg-white shadow-sm">
       <div className="p-6 flex">
         <Logo />
-        <span className="pl-4 text-4xl font-semibold text-slate-800">Eventi</span>
+        <span className="pl-2 text-4xl font-semibold text-slate-800">Eventi</span>
       </div>
       <div className="flex flex-col w-full">
         <SidebarRoutes />
