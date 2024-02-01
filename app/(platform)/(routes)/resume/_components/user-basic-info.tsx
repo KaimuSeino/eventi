@@ -1,6 +1,5 @@
 "use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -14,6 +13,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
+import UserNameAndEmail from "./user-name-and-email";
 
 interface UserBasicInfoProps {
   user: User | null;
@@ -21,7 +21,9 @@ interface UserBasicInfoProps {
 
 const formSchema = z.object({
   firstName: z.string().min(1),
+  katakanaFirstName: z.string().min(1),
   lastName: z.string().min(1),
+  katakanaLastName: z.string().min(1),
   email: z.string().min(1),
 })
 
@@ -34,7 +36,14 @@ const UserBasicInfo = ({
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema)
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: user?.firstName ? user.firstName : "",
+      lastName: user?.lastName ? user.lastName : "",
+      katakanaFirstName: user?.katakanaFirstName ? user.katakanaFirstName : "",
+      katakanaLastName: user?.katakanaLastName ? user.katakanaLastName : "",
+      email: user?.email ? user.email : "",
+    }
   })
 
   const { isSubmitting, isValid } = form.formState
@@ -47,7 +56,7 @@ const UserBasicInfo = ({
       router.refresh()
     } catch (error) {
       console.log("[USER]", error);
-      toast.error("問題が発生しました");
+      toast.error("このメールアドレスはすでに登録されています。");
     }
   }
 
@@ -68,7 +77,7 @@ const UserBasicInfo = ({
       <p className="text-lg font-extrabold">基本情報</p>
       <div className="mt-4 border bg-slate-100 rounded-md p-4">
         <div className="font-medium flex items-center justify-between">
-          性名・メールアドレス
+          姓名・メールアドレス
           {user ? (
             <div>
               <Button onClick={toggleEdit} variant="ghost">
@@ -92,33 +101,15 @@ const UserBasicInfo = ({
         </div>
         <Separator className="mb-4" />
         {!isEditing && (
-          <div className="font-medium md:grid md:grid-cols-3 md:gap-4 md:items-center">
-            <div className="flex justify-center my-4 md:my-0">
-              <Avatar>
-                <AvatarImage src={user?.image!} />
-              </Avatar>
-            </div>
-            <div className="flex flex-col gap-y-2">
-              {/* 名前などの基本情報 */}
-              <div>
-                性：
-                <span className="font-bold">
-                  {!user?.lastName ? "未入力" : user.lastName}
-                </span>
-              </div>
-              <div>
-                名：
-                <span className="font-bold">
-                  {!user?.firstName ? "未入力" : user.firstName}
-                </span>
-              </div>
-            </div>
-            <div className="my-4 md:my-0">
-              メールアドレス：
-              <span>
-                {!user?.email ? "未入力" : user.email}
-              </span>
-            </div>
+          <div className="font-medium flex flex-col items-center">
+            <UserNameAndEmail
+              firstName={user?.firstName!}
+              katakanaFirstName={user?.katakanaFirstName!}
+              lastName={user?.lastName!}
+              katakanaLastName={user?.katakanaLastName!}
+              image={user?.image!}
+              email={user?.email!}
+            />
           </div>
         )}
         {isEditing && (
@@ -127,14 +118,15 @@ const UserBasicInfo = ({
               onSubmit={form.handleSubmit(onSubmit)}
               className="space-y-4 mt-4"
             >
-              <div className="flex items-center justify-around">
+              {/* 漢字 */}
+              <div className="flex items-center justify-around gap-x-3">
                 <div className="w-full p-2">
                   <FormField
                     control={form.control}
                     name="lastName"
                     render={({ field }) => (
-                      <FormItem className="flex items-center">
-                        <FormLabel>性：</FormLabel>
+                      <FormItem className="flex items-center gap-x-3">
+                        <FormLabel className="w-16">性</FormLabel>
                         <FormControl>
                           <Input
                             disabled={isSubmitting}
@@ -151,12 +143,55 @@ const UserBasicInfo = ({
                     control={form.control}
                     name="firstName"
                     render={({ field }) => (
-                      <FormItem className="flex items-center">
-                        <FormLabel>名：</FormLabel>
+                      <FormItem className="flex items-center gap-x-3">
+                        <FormLabel className="w-16">
+                          名
+                        </FormLabel>
                         <FormControl>
                           <Input
                             disabled={isSubmitting}
                             placeholder="名"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              {/* カタカナ */}
+              <div className="flex items-center justify-around gap-x-3">
+                <div className="w-full p-2">
+                  <FormField
+                    control={form.control}
+                    name="katakanaLastName"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center gap-x-3">
+                        <FormLabel className="w-16">性(カナ)</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isSubmitting}
+                            placeholder="性(カナ)"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="w-full p-2">
+                  <FormField
+                    control={form.control}
+                    name="katakanaFirstName"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center gap-x-3">
+                        <FormLabel className="w-16">
+                          名(カナ)
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isSubmitting}
+                            placeholder="名（カナ）"
                             {...field}
                           />
                         </FormControl>
@@ -170,8 +205,8 @@ const UserBasicInfo = ({
                   control={form.control}
                   name="email"
                   render={({ field }) => (
-                    <FormItem className="flex items-center gap-y-2">
-                      <FormLabel className="w-full">メールアドレス：</FormLabel>
+                    <FormItem className="flex items-center gap-x-3">
+                      <FormLabel className="w-full">メールアドレス</FormLabel>
                       <FormControl>
                         <Input
                           disabled={isSubmitting}

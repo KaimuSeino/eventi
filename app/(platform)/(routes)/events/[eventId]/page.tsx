@@ -102,7 +102,9 @@ const EventIdPage = async ({
                     </div>
                   )}
                 </div>
-              ) : <EventJoiningButton eventId={event.id} userId={userId} />}
+              ) : (
+                <EventJoiningButton eventId={event.id} userId={userId} />
+              )}
             </div>
           </div>
           <div className="px-4">

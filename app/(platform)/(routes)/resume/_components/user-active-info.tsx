@@ -75,7 +75,15 @@ const UserActiveInfo = (
             {/* この部分にイベントのアンケート情報を取得して表示させたい */}
             {event.surveys && event.surveys.length > 0 && (
               <div className="mt-4">
-                <p className="font-semibold">Eventi履歴書</p>
+                <p className="flex items-center gap-x-2">
+                  <Image
+                    height={20}
+                    width={20}
+                    alt="logo"
+                    src="/logo.png"
+                  />
+                  <span className='font-semibold'>Eventi履歴書</span>
+                </p>
                 {event.surveys.map((survey, surveyIndex) => (
                   <div key={surveyIndex} className="my-2">
                     <p className="bg-slate-100 rounded-md p-1 text-base font-medium">{survey.question}</p>

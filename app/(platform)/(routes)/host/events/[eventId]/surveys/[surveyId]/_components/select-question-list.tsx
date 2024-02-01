@@ -1,6 +1,6 @@
 "use client";
 
-import { SelectQuestion, Survey } from "@prisma/client";
+import { SelectQuestion } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils"
 import {
@@ -9,8 +9,7 @@ import {
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd"
-import { Grid, Grip, Pencil, Trash } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Grip } from "lucide-react";
 
 interface SelectQuestionListProps {
   items: SelectQuestion[];
@@ -102,6 +101,7 @@ export const SelectQuestionList = ({
                 )}
               </Draggable>
             ))}
+            {provided.placeholder}
           </div>
         )}
       </Droppable>

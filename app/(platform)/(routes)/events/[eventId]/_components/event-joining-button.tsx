@@ -5,6 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { ComfirmJoining } from './comfirm-joining';
 
 interface EventJoiningButtonProps {
   eventId: string;
@@ -25,9 +26,11 @@ const EventJoiningButton: React.FC<EventJoiningButtonProps> = ({ eventId, userId
   };
 
   return (
-    <Button onClick={handleRegistration}>
-      参加申し込みをする
-    </Button>
+    <ComfirmJoining onComfirm={handleRegistration}>
+      <Button>
+        参加申し込みをする
+      </Button>
+    </ComfirmJoining>
   );
 };
 
