@@ -85,3 +85,9 @@ body,
 .ql-container {
   font-size: 16px !important;
 }
+
+.bg-image {
+  background-image: url('/path-to-your-image.jpg');
+  background-size: cover;
+  background-position: center;
+}

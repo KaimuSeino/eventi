@@ -1,7 +1,7 @@
 import { IconBadge } from "@/components/IconBadge";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
-import { FileCheck, LayoutDashboard, ListChecks } from "lucide-react";
+import { LayoutDashboard, ListChecks } from "lucide-react";
 import { redirect } from "next/navigation";
 import TitleForm from "./_components/TitleForm";
 import DescriptionForm from "./_components/DescriptionForm";
@@ -56,7 +56,7 @@ const EventIdPage = async ({
     event.categoryId,
     event.detail,
     event.datetime,
-    event.surveys
+    event.surveys,
   ]
 
   const totalFields = requiredFields.length;

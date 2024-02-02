@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Yellowtail } from 'next/font/google'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { ConfettiProvider } from '@/components/providers/ConfettiProvider'
 import { siteConfig } from '@/config/site'
 import { localization } from '@/lib/auth'
+import { dark, neobrutalism, shadesOfPurple } from '@clerk/themes'
 
 const inter = Inter({ subsets: ['latin'] })
 

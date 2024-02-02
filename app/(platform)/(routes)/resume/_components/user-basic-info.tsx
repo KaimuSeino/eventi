@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
 import UserNameAndEmail from "./user-name-and-email";
+import UserSchool from "./user-school";
 
 interface UserBasicInfoProps {
   user: User | null;
@@ -25,6 +26,9 @@ const formSchema = z.object({
   lastName: z.string().min(1),
   katakanaLastName: z.string().min(1),
   email: z.string().min(1),
+  school: z.string().min(1),
+  faculty: z.string().min(1),
+  grade: z.string().min(1),
 })
 
 const UserBasicInfo = ({
@@ -43,6 +47,9 @@ const UserBasicInfo = ({
       katakanaFirstName: user?.katakanaFirstName ? user.katakanaFirstName : "",
       katakanaLastName: user?.katakanaLastName ? user.katakanaLastName : "",
       email: user?.email ? user.email : "",
+      school: user?.school ? user.school : "",
+      faculty: user?.faculty ? user.faculty : "",
+      grade: user?.grade ? user.grade : "",
     }
   })
 
@@ -109,6 +116,11 @@ const UserBasicInfo = ({
               katakanaLastName={user?.katakanaLastName!}
               image={user?.image!}
               email={user?.email!}
+            />
+            <UserSchool
+              school={user?.school!}
+              faculty={user?.faculty!}
+              grade={user?.grade!}
             />
           </div>
         )}
@@ -200,6 +212,7 @@ const UserBasicInfo = ({
                   />
                 </div>
               </div>
+              {/* メールアドレス */}
               <div className="p-2">
                 <FormField
                   control={form.control}
@@ -217,6 +230,67 @@ const UserBasicInfo = ({
                     </FormItem>
                   )}
                 />
+              </div>
+              {/* 学校 */}
+              <div className="flex items-center justify-around gap-x-3">
+                <div className="w-full p-2">
+                  <FormField
+                    control={form.control}
+                    name="school"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center gap-x-3">
+                        <FormLabel className="w-16">大学名</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isSubmitting}
+                            placeholder="大学名"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="w-full p-2">
+                  <FormField
+                    control={form.control}
+                    name="faculty"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center gap-x-3">
+                        <FormLabel className="w-16">
+                          学部
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isSubmitting}
+                            placeholder="学部"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="w-full p-2">
+                  <FormField
+                    control={form.control}
+                    name="grade"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center gap-x-3">
+                        <FormLabel className="w-16">
+                          学年
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isSubmitting}
+                            placeholder="学年"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
               <div className="flex items-center gap-x-2">
                 <Button
