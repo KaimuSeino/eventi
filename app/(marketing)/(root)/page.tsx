@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div>
       <header className="p-4 border-b h-full flex items-center bg-white shadow-sm">
-        <nav className="container flex justify-between items-center">
+        <nav className="md:container w-full flex justify-between items-center">
           <div className="flex gap-x-2 text-4xl font-bold">
             <Image
               width={40}
@@ -16,7 +16,7 @@ export default function Home() {
             />
             Eventi
           </div>
-          <div className="space-x-12 font-bold">
+          <div className="space-x-4 font-bold">
             <Link href="/sign-in">
               ログイン
             </Link>
