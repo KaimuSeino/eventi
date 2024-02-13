@@ -1,12 +1,14 @@
 "use client"
 
-import { UserButton, useAuth } from "@clerk/nextjs";
-import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { SearchInput } from "./SearchInput";
 import { isHost } from "@/lib/host";
+import { UserButton } from "@/components/user-button";
+// import { UserButton } from "@/components/user-button";
 
 const NavbarRoutes = () => {
 
@@ -26,7 +28,7 @@ const NavbarRoutes = () => {
       )}
       <div className="flex ml-auto gap-x-2">
         {isHostPage || isGuestPage ? (
-          <Link href="/">
+          <Link href="/search">
             <Button size="sm" variant="ghost">
               <LogOut className="h-4 w-4 mr-2" />
               Exit
@@ -39,7 +41,7 @@ const NavbarRoutes = () => {
             </Button>
           </Link>
         ) : null}
-        <UserButton afterSignOutUrl="/" />
+        <UserButton />
       </div>
     </>
   );

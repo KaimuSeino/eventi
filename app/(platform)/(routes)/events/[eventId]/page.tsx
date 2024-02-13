@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { getSurvey } from "@/actions/get-surveys";
 import CreateUserSurveyFormButton from "./_components/create-user-survey-form-button";
 import { getUserSurveys } from "@/actions/get-user-surveys";
+import { getUser } from "@/actions/get-user";
 
 const EventIdPage = async ({
   params
@@ -38,6 +39,10 @@ const EventIdPage = async ({
 
   const surveys = await getSurvey({
     eventId: params.eventId
+  })
+
+  const user = await getUser({
+    userId: userId
   })
 
   const userSurveyWithAnswers = await getUserSurveys({
@@ -103,7 +108,7 @@ const EventIdPage = async ({
                   )}
                 </div>
               ) : (
-                <EventJoiningButton eventId={event.id} userId={userId} />
+                <EventJoiningButton user={user} eventId={event.id} userId={userId} />
               )}
             </div>
           </div>
@@ -130,11 +135,11 @@ const EventIdPage = async ({
             <Preview value={event.detail!} />
           </div>
         </div >
-        <Separator />
+        {/* <Separator />
         <h2 className="p-4 text-lg font-bold">コメント</h2>
         <div className="px-4">
           <CommentForm eventId={event.id} />
-        </div>
+        </div> */}
       </div >
     );
   } else {

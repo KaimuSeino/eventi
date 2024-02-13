@@ -32,7 +32,6 @@ model Event {
   title       String    @db.Text
   description String?   @db.Text
   imageUrl    String?   @db.Text
-  // price Float? 
   detail      String?   @db.Text
   datetime    DateTime? @db.Date
 
@@ -81,10 +80,12 @@ model UserJoining {
   eventId String
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-  firstName    String?
-  lastName     String?
-  userImage    String? @db.Text
-  emailAddress String? @db.Text
+  firstName         String?
+  katakanaFirstName String?
+  lastName          String?
+  katakanaLastName  String?
+  userImage         String? @db.Text
+  emailAddress      String? @db.Text
 
   isCompleted Boolean @default(false)
 

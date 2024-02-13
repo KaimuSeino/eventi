@@ -6,14 +6,20 @@ import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { ComfirmJoining } from './comfirm-joining';
+import { User } from '@prisma/client';
 
 interface EventJoiningButtonProps {
   eventId: string;
   userId: string;
+  user: User | null;
 }
 
-const EventJoiningButton: React.FC<EventJoiningButtonProps> = ({ eventId, userId }) => {
-  const router = useRouter()
+const EventJoiningButton = ({
+  eventId,
+  userId,
+  user,
+}: EventJoiningButtonProps) => {
+  const router = useRouter();
   const handleRegistration = async () => {
     try {
       await axios.post(`/api/events/${eventId}/joining`, { userId });

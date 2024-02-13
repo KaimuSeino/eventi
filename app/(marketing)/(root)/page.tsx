@@ -1,8 +1,13 @@
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
 
 export default function Home() {
+
+  const { userId } = auth();
+
+
   return (
     <div>
       <header className="p-4 border-b h-full flex items-center bg-white shadow-sm">
@@ -17,12 +22,23 @@ export default function Home() {
             Eventi
           </div>
           <div className="space-x-4 font-bold">
-            <Link href="/sign-in">
-              ログイン
-            </Link>
-            <Link href="/sign-up">
-              新規登録
-            </Link>
+            {userId ? (
+              <div>
+                <Link href="/search">
+                  イベントを探す
+                </Link>
+              </div>
+            ) : (
+              <div className="flex gap-x-4">
+                <Link href="/sign-in">
+                  ログイン
+                </Link>
+                <Link href="/sign-up">
+                  新規登録
+                </Link>
+              </div>
+            )}
+
           </div>
         </nav>
       </header>
@@ -32,7 +48,7 @@ export default function Home() {
             <source src="/flowers.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video> */}
-          <div className="container mx-auto md:flex md:justify-around items-center py-60 md:py-30" style={{ position: 'relative', zIndex: 1 }}>
+          <div className="container mx-auto md:flex md:justify-around items-center py-32 md:py-30" style={{ position: 'relative', zIndex: 1 }}>
             <div className="flex flex-col text-center md:text-left">
               <h1 className="text-5xl sm:text-7xl">イベント＋ガクチカ</h1>
               <p className="mb-10 text-xl">
