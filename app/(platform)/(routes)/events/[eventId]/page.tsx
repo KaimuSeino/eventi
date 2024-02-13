@@ -62,7 +62,7 @@ const EventIdPage = async ({
   if (event) {
     return (
       <div className="flex flex-col max-w-4xl mx-auto pb-20">
-        <div className="p-4">
+        <div className="md:p-4">
           <div className="relative aspect-video">
             <div className="absolute inset-0 flex items-center justify-center bg-slate-800">
               <Image
