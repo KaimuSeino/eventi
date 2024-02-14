@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart, Compass, Layout, List, User } from "lucide-react";
+import { Compass, Layout, List, User } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 import { usePathname } from "next/navigation";
 
@@ -29,9 +29,9 @@ const hostRoutes = [
     href: "/host/events",
   },
   {
-    icon: BarChart,
-    label: "分析",
-    href: "/host/analytics",
+    icon: User,
+    label: "ホストプロフィール",
+    href: "/host/profile",
   },
 ]
 

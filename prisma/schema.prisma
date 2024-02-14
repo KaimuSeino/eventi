@@ -26,6 +26,14 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+model Host {
+  userId  String  @id
+  campany String?
+  detail  String? @db.Text
+  image   String?
+  link    String?
+}
+
 model Event {
   id          String    @id @default(uuid())
   userId      String

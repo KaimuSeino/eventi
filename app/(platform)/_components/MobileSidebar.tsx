@@ -1,19 +1,18 @@
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import Sidebar from "./Sidebar";
+import Image from "next/image";
 
 const MobileSidebar = () => {
   return (
-    <Sheet>
-      <SheetTrigger className="md:hidden">
-        <Menu />
-      </SheetTrigger>
-      <SheetContent className="p-0 bg-white" side={"left"}>
-        <SheetClose asChild>
-          <Sidebar />
-        </SheetClose>
-      </SheetContent>
-    </Sheet>
+    <div className="md:hidden">
+      <Image
+        width={150}
+        height={30}
+        alt="EventiLogo"
+        src="/Eventi.png"
+      />
+    </div>
   );
 }
 
