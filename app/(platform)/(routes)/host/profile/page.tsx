@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { HostBasicInfo } from "./_components/host-basic-info";
+import { HostInfo } from "./_components/host-info";
 
 const HostProfilePage = async () => {
   const { userId } = auth();
@@ -12,7 +12,7 @@ const HostProfilePage = async () => {
   return (
     <div className="flex flex-col max-w-4xl mx-auto pb-20">
       <div className="p-4">
-        <HostBasicInfo />
+        <HostInfo />
       </div>
     </div>
   )

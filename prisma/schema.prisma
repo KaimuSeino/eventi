@@ -29,6 +29,7 @@ model User {
 model Host {
   userId  String  @id
   campany String?
+  email   String? @unique
   detail  String? @db.Text
   image   String?
   link    String?
