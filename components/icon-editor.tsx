@@ -12,8 +12,8 @@ interface IconEditorProps {
   onChangeIcon: (iconFile: File | null) => void;
 }
 
-const ICON_WIDTH = 160 as const;
-const ICON_HEIGHT = 160 as const;
+const ICON_WIDTH = 180 as const;
+const ICON_HEIGHT = 180 as const;
 
 export const IconEditor = ({
   previewIcon,
@@ -33,6 +33,7 @@ export const IconEditor = ({
     const picaCanvas = await pica().resize(img, canvas, { alpha: true })
 
     picaCanvas.toBlob((blob) => {
+      console.log(blob)
       const nextFile = new File([blob!], previewIcon?.name!, {
         type: previewIcon?.type,
         lastModified: Date.now(),

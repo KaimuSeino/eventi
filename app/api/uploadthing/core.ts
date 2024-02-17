@@ -21,6 +21,9 @@ export const ourFileRouter = {
     .onUploadComplete(() => { }),
   eventAttachment: f(["text", "image", "video", "audio", "pdf"])
     .middleware(() => handleAuth())
+    .onUploadComplete(() => { }),
+  iconImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
+    .middleware(() => handleAuth())
     .onUploadComplete(() => { })
 } satisfies FileRouter;
 

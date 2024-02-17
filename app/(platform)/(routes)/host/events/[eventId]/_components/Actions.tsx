@@ -9,14 +9,17 @@ import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { AlertHostProfile } from "./alert-host-profile";
 
 interface ActionProps {
+  isHostComplete: boolean;
   disabled: boolean;
   eventId: string;
   isPublished: boolean;
 }
 
 export const Actions = ({
+  isHostComplete,
   disabled,
   eventId,
   isPublished
@@ -34,12 +37,12 @@ export const Actions = ({
       if (isPublished) {
         await axios.patch(`/api/events/${eventId}/unpublish`);
         toast.success("イベントを非公開にしました。");
-        router.refresh()
+        router.refresh();
       } else {
         await axios.patch(`/api/events/${eventId}/publish`);
         toast.success("イベントを公開しました。");
         confetti.onOpen();
-        router.refresh()
+        router.refresh();
       }
 
     } catch (error) {
@@ -67,14 +70,19 @@ export const Actions = ({
 
   return (
     <div className="flex items-center gap-x-2">
-      <Button
+      <AlertHostProfile
         onClick={onClick}
-        disabled={disabled || isLoading}
-        variant="outline"
-        size="sm"
+        isHostComplete={isHostComplete}
+        isPublished={isPublished}
       >
-        {isPublished ? "非公開にする" : "公開する"}
-      </Button>
+        <Button
+          disabled={disabled || isLoading}
+          variant="outline"
+          size="sm"
+        >
+          {isPublished ? "非公開にする" : "公開する"}
+        </Button>
+      </AlertHostProfile>
       <ComfirmModal onComfirm={onDelete}>
         <Button
           size="sm"

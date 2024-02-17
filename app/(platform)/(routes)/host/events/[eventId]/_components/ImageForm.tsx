@@ -39,7 +39,7 @@ const ImageForm = ({
       toggleEdit()
       router.refresh()
     } catch (error) {
-      toast.error("何か問題起きちゃった！！")
+      toast.error("何か問題が起きました")
     }
   }
 
@@ -86,6 +86,8 @@ const ImageForm = ({
           <FileUpload
             endpoint="eventImage"
             onChange={(url) => {
+              // console.log(url)
+              // https://utfs.io/f/4f4d6ed4-d5ea-4b0e-8c62-90d1a3c579d3-tnm6fb.jpeg
               if (url) {
                 onSubmit({ imageUrl: url })
               }

@@ -1,30 +1,29 @@
 import { db } from "@/lib/db";
-import { auth, currentUser } from "@clerk/nextjs"
-import { NextResponse } from "next/server"
+import { auth, currentUser } from "@clerk/nextjs";
+import { NextResponse } from "next/server";
 
-export async function POST(
-  req: Request
-) {
+export async function POST() {
   try {
     const { userId } = auth();
     const user = await currentUser();
+
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    const userInfo = await db.user.create({
+    const host = await db.host.create({
       data: {
         userId: userId,
-        image: user?.imageUrl,
-        email: user?.emailAddresses[0].emailAddress
+        email: user?.emailAddresses[0].emailAddress,
+        image: user?.imageUrl
       }
-    })
+    });
 
-    return NextResponse.json(userInfo)
+    return NextResponse.json(host);
   } catch (error) {
-    console.log("[CREATE_USER_PROFILE]", error)
-    return new NextResponse("Internal Error", { status: 500 })
+    console.log("[CREATE_HOST_PROFILE]", error);
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }
 
@@ -33,12 +32,12 @@ export async function PATCH(
 ) {
   try {
     const { userId } = auth();
-    const values = await req.json()
+    const values = await req.json();
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    const userInfo = await db.user.update({
+    const host = await db.host.update({
       where: {
         userId: userId
       },
@@ -47,9 +46,9 @@ export async function PATCH(
       }
     })
 
-    return NextResponse.json(userInfo)
+    return NextResponse.json(host);
   } catch (error) {
-    console.log("[UPDATE_PROFILE]", error)
+    console.log("[UPDATE_PROFILE]", error);
     return new NextResponse("Internal Error", { status: 500 })
   }
 }

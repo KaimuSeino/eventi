@@ -59,8 +59,8 @@ const UserBasicInfo = ({
     try {
       await axios.patch(`/api/user`, values);
       toast.success("プロフィールが更新されました！");
-      toggleEdit()
-      router.refresh()
+      toggleEdit();
+      router.refresh();
     } catch (error) {
       console.log("[USER]", error);
       toast.error("このメールアドレスはすでに登録されています。");
@@ -72,7 +72,6 @@ const UserBasicInfo = ({
       await axios.post(`/api/user`);
       toast.success("プロフィールが作成されました！");
       router.refresh();
-
     } catch (error) {
       toast.error('問題が発生しました');
     }

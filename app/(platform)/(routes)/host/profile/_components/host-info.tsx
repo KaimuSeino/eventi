@@ -1,6 +1,7 @@
 import { getHostByEmail } from "@/data/host";
 import { currentUser } from "@clerk/nextjs";
 import BasicInfoForm from "./basic-info-form";
+import CreateHostProfileForm from "./create-host-profile-form";
 
 export const HostInfo = async () => {
 
@@ -10,7 +11,15 @@ export const HostInfo = async () => {
 
   return (
     <>
-      <BasicInfoForm host={host!} />
+      {host ? (
+        <>
+          <BasicInfoForm host={host!} />
+        </>
+      ) : (
+        <div>
+          <CreateHostProfileForm />
+        </div>
+      )}
     </>
   );
 }

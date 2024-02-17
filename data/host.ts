@@ -23,3 +23,19 @@ export const getHostById = async (userId?: string) => {
     return null
   }
 }
+
+export const getHostByEventId = async (eventId?: string) => {
+  try {
+    const event = await db.event.findUnique({
+      where: { id: eventId }
+    });
+
+    const host = await db.host.findUnique({
+      where: { userId: event?.userId }
+    });
+
+    return host;
+  } catch {
+    return null;
+  }
+}

@@ -12,6 +12,7 @@ import { Actions } from "./_components/Actions";
 import { Banner } from "@/components/banner";
 import DateForm from "./_components/DateForm";
 import SurveyForm from "./_components/SurveyForm";
+import { getHostByEventId, getHostById } from "@/data/host";
 
 const EventIdPage = async ({
   params
@@ -59,6 +60,15 @@ const EventIdPage = async ({
     event.surveys,
   ]
 
+  const host = await getHostById(userId);
+  const requiredHost = [
+    host?.campany,
+    host?.email,
+    host?.image,
+    host?.detail,
+  ]
+  const isHostComplete = requiredHost.every(Boolean);
+
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length
 
@@ -85,6 +95,7 @@ const EventIdPage = async ({
             </span>
           </div>
           <Actions
+            isHostComplete={isHostComplete}
             disabled={!isComplete}
             eventId={params.eventId}
             isPublished={event.isPublished}

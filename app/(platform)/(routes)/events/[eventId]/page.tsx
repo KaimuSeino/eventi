@@ -15,6 +15,8 @@ import { getSurvey } from "@/actions/get-surveys";
 import CreateUserSurveyFormButton from "./_components/create-user-survey-form-button";
 import { getUserSurveys } from "@/actions/get-user-surveys";
 import { getUser } from "@/actions/get-user";
+import { getHostByEventId, getHostById } from "@/data/host";
+import EventHost from "./_components/event-host";
 
 const EventIdPage = async ({
   params
@@ -31,6 +33,10 @@ const EventIdPage = async ({
   const event = await getEvent({
     eventId: params.eventId
   })
+
+  const host = await getHostByEventId(
+    params.eventId
+  )
 
   const joining = await getJoining({
     eventId: params.eventId,
@@ -129,6 +135,11 @@ const EventIdPage = async ({
                 </span>
               </div>
             </div>
+          </div>
+          <div className="px-4 pb-4">
+            {host && (
+              <EventHost host={host} />
+            )}
           </div>
           <Separator />
           <div>
