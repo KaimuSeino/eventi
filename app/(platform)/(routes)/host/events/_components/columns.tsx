@@ -3,14 +3,17 @@
 import { Button } from "@/components/ui/button"
 import { Event } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, FileCheck, MessageCircle, MoreHorizontal, Pencil, UserCheck } from "lucide-react"
-
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  Pencil,
+  UserCheck,
+  FileCheck,
+} from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
@@ -104,16 +107,16 @@ export const columns: ColumnDef<Event>[] = [
                 イベント編集
               </DropdownMenuItem>
             </Link>
-            <Link href={`/host/events/${id}/comments`}>
-              <DropdownMenuItem>
-                <MessageCircle className="h-4 w-4 mr-2" />
-                コメント一覧
-              </DropdownMenuItem>
-            </Link>
             <Link href={`/host/events/${id}/joining`}>
               <DropdownMenuItem>
                 <UserCheck className="h-4 w-4 mr-2" />
                 参加者一覧
+              </DropdownMenuItem>
+            </Link>
+            <Link href={`/host/events/${id}/answers`}>
+              <DropdownMenuItem>
+                <FileCheck className="h-4 w-4 mr-2" />
+                アンケート回答
               </DropdownMenuItem>
             </Link>
           </DropdownMenuContent>

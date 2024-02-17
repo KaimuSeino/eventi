@@ -55,6 +55,7 @@ model Event {
   Comment     Comment[]
   UserJoining UserJoining[]
   surveys     Survey[]
+  Application Application[]
 
   @@index([categoryId])
   @@fulltext([title])
@@ -100,6 +101,19 @@ model UserJoining {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([eventId])
+}
+
+model Application {
+  id     String @id @default(cuid())
+  hostId String
+
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  question String?
+  position Int
 
   @@index([eventId])
 }
