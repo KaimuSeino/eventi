@@ -25,10 +25,13 @@ const formSchema = z.object({
   detail: z.string().min(1)
 })
 
+const detail = `<h2><strong>自己紹介</strong></h2><p><br></p><p>ご本人や企業・団体を紹介しましょう。プロジェクトの信頼性が高まります。</p><p><br></p><p><br></p><h2><strong>このプロジェクトで実現したいこと</strong></h2><p><br></p><p>プロジェクトの内容や目的を、具体的に書きましょう。</p><p><br></p><p><br></p><h2><strong>プロジェクトの立ち上げ背景</strong></h2><p><br></p><p>立ち上げに至った経緯や思い、これまでの活動などを書きましょう。</p><p><br></p><p><br></p><h2><strong>スケジュール</strong></h2><p><br></p><p>プロジェクトの日程を説明しましょう。</p><p><br></p><p><br></p><h2><strong>開催地</strong></h2><p><br></p><p>開催地を詳しく説明しましょう。</p><p><br></p><p><br></p><h2><strong>料金</strong></h2><p><br></p><p>料金がある場合は記入してください。</p><p><br></p><p><br></p><h2><strong>定員</strong></h2><p><br></p><p>何人までですか？</p><p><br></p><p><br></p><h2><strong>募集対象</strong></h2><p><br></p><p>募集対象について教えてください。</p><p><br></p><p><br></p><h2><strong>最後に</strong></h2><p><br></p><p>プロジェクトを統括しましょう。メッセージ性のある文章にしましょう。</p>`
+
 const DetailForm = ({
   initialData,
   eventId
 }: DetailFormProps) => {
+  console.log(initialData.detail)
 
   const router = useRouter()
 
@@ -38,7 +41,7 @@ const DetailForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      detail: initialData?.detail || ""
+      detail: initialData?.detail || detail
     }
   })
 
@@ -75,7 +78,11 @@ const DetailForm = ({
           "text-sm mt-2",
           !initialData.detail && "text-slate-500 italic"
         )}>
-          {!initialData.detail && "イベントの詳しい内容を記入しましょう"}
+          {!initialData.detail && (
+            <Preview
+              value={detail}
+            />
+          )}
           {initialData.detail && (
             <Preview
               value={initialData.detail}

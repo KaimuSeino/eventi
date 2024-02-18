@@ -3,6 +3,8 @@ import { getEventByEventId } from "@/data/event";
 import { getSurveyAndAnswerByEventId, getSurveyByEventId } from "@/data/survey";
 import { getJoinUserByEventId } from "@/data/user";
 import { getUserAnswerByEventId } from "@/data/userAnswer";
+import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 import { FaUser } from "react-icons/fa";
 
 const AnsersPage = async ({
@@ -10,6 +12,12 @@ const AnsersPage = async ({
 }: {
   params: { eventId: string }
 }) => {
+  const { userId } = auth();
+
+  if (!userId) {
+    return redirect("/search")
+  }
+
   const event = await getEventByEventId(params.eventId);
   const surveys = await getSurveyAndAnswerByEventId(params.eventId);
   const users = await getJoinUserByEventId(params.eventId);

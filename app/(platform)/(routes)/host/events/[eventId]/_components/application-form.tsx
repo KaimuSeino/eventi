@@ -1,23 +1,32 @@
 "use client"
 
-import * as z from "zod"
-import axios from "axios"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
-import { Button } from "@/components/ui/button"
-import { Loader2, Pencil, PlusCircle } from "lucide-react"
-import { useState } from "react"
-import toast from "react-hot-toast"
-import { useRouter } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Event, Survey } from "@prisma/client"
-import { Input } from "@/components/ui/input"
-import { SurveysList } from "./SurveysList"
+import * as z from "zod";
+import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import {
+  Loader2,
+  PlusCircle,
+} from "lucide-react";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Application, Event } from "@prisma/client";
+import { Input } from "@/components/ui/input";
+import { ApplicationList } from "./application-list";
 
 interface ApplicationFormProps {
-  initialData: Event & { surveys: Survey[] }
-  eventId: string
+  initialData: Event & { applications: Application[] }
+  eventId: string;
 }
 
 const formSchema = z.object({
@@ -48,8 +57,8 @@ const ApplicationForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post(`/api/events/${eventId}/surveys`, values)
-      toast.success("アンケートが作成されました！")
+      await axios.post(`/api/events/${eventId}/form`, values)
+      toast.success("申し込みフォームが作成されました！")
       toggleCreating()
       router.refresh()
     } catch (error) {
@@ -64,10 +73,10 @@ const ApplicationForm = ({
     try {
       setIsUpdating(true);
 
-      await axios.put(`/api/events/${eventId}/surveys/reorder`, {
+      await axios.put(`/api/events/${eventId}/form/reorder`, {
         list: updateData
       });
-      toast.success("イベントの情報を更新しました");
+      toast.success("フォームの情報を更新しました");
       router.refresh();
     } catch (error) {
       toast.error("何か問題が起きました。");
@@ -77,7 +86,7 @@ const ApplicationForm = ({
   }
 
   const onEdit = (id: string) => {
-    router.push(`/host/events/${eventId}/surveys/${id}`)
+    router.push(`/host/events/${eventId}/form/${id}`)
   }
 
   return (
@@ -88,14 +97,14 @@ const ApplicationForm = ({
         </div>
       )}
       <div className="font-medium flex items-center justify-between">
-        アンケート
+        申し込みフォーム
         <Button onClick={toggleCreating} variant="ghost">
           {isCreating ? (
             <>キャンセル</>
           ) : (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
-              アンケートを追加
+              フォームを追加
             </>
           )}
         </Button>
@@ -114,7 +123,7 @@ const ApplicationForm = ({
                   <FormControl>
                     <Input
                       disabled={isSubmitting}
-                      placeholder="質問内容を入力してください"
+                      placeholder="フォーム内容を入力してください"
                       {...field}
                     />
                   </FormControl>
@@ -136,13 +145,13 @@ const ApplicationForm = ({
       {!isCreating && (
         <div className={cn(
           "text-sm mt-2",
-          !initialData.surveys.length && "text-slate-500 italic"
+          !initialData.applications.length && "text-slate-500 italic"
         )}>
-          {!initialData.surveys.length && "アンケートがありません"}
-          <SurveysList
+          {!initialData.applications.length && "申し込みフォームを作成してください"}
+          <ApplicationList
             onEdit={onEdit}
             onReorder={onReorder}
-            items={initialData.surveys || []}
+            items={initialData.applications || []}
           />
         </div>
       )}
