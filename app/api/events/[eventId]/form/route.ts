@@ -48,6 +48,7 @@ export async function POST(
 }
 
 export async function PATCH(
+  req: Request,
   { params }: { params: { eventId: string } }
 ) {
   try {

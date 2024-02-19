@@ -53,6 +53,7 @@ export async function PATCH(
 }
 
 export async function POST(
+  req: Request,
   { params }: { params: { eventId: string } }
 ) {
   try {
