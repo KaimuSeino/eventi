@@ -4,7 +4,6 @@ import * as z from "zod"
 import { IconEditor } from "@/components/icon-editor";
 import { IconUpload } from "@/components/icon-upload";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Host } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useCallback, useRef, useState } from "react";
@@ -39,12 +38,6 @@ const IconImageForm = ({
   const [icon, setIcon] = useState<File | null>(null);
   const [previewIcon, setPreviewIcon] = useState<File | null>(null);
   const iconInputRef = useRef<HTMLInputElement | null>(null);
-
-  if (icon) {
-    // console.log(URL.createObjectURL(icon))
-    // blob:http://localhost:3000/346f0f6f-c5de-4746-9d1b-b11b568a7a64
-  }
-
 
   const handleClickChangeIcon = useCallback(() => {
     if (!iconInputRef || !iconInputRef.current) return;

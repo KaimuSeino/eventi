@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import UserBasicInfo from "./_components/user-basic-info";
+import UserBasicInfo from "./_components/user-basic-info-form";
 import UserActiveInfo from "./_components/user-active-info";
 import { getUserActions } from "@/actions/get-user-action";
 import { db } from "@/lib/db";

@@ -8,9 +8,15 @@ import Link from "next/link";
 import { SearchInput } from "./SearchInput";
 import { isHost } from "@/lib/host";
 import { UserButton } from "@/components/user-button";
-// import { UserButton } from "@/components/user-button";
+import { User } from "@prisma/client";
 
-const NavbarRoutes = () => {
+interface NavbarRoutesProps {
+  userInfo: User | null
+}
+
+const NavbarRoutes = ({
+  userInfo
+}: NavbarRoutesProps) => {
 
   const { userId } = useAuth();
   const pathname = usePathname();
@@ -41,7 +47,7 @@ const NavbarRoutes = () => {
             </Button>
           </Link>
         ) : null}
-        <UserButton />
+        <UserButton userInfo={userInfo} />
       </div>
     </>
   );
