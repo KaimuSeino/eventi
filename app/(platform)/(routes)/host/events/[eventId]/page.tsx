@@ -63,7 +63,8 @@ const EventIdPage = async ({
     event.categoryId,
     event.detail,
     event.datetime,
-    event.surveys,
+    event.applications.find((application) => application.question),
+    event.surveys.find((survey) => survey.question),
   ]
 
   const host = await getHostById(userId);

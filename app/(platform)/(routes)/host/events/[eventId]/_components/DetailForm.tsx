@@ -31,7 +31,6 @@ const DetailForm = ({
   initialData,
   eventId
 }: DetailFormProps) => {
-  console.log(initialData.detail)
 
   const router = useRouter()
 

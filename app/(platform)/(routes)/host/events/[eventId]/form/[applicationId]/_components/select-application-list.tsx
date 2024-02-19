@@ -1,43 +1,43 @@
 "use client";
 
-import { Application } from "@prisma/client";
+import { SelectUserApplication } from "@prisma/client";
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
-} from "@hello-pangea/dnd";
-import { Grip, Pencil } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+} from "@hello-pangea/dnd"
+import { Grip } from "lucide-react";
 
-interface ApplicationListProps {
-  items: Application[];
+interface SelectApplicationListProps {
+  items: SelectUserApplication[];
   onReorder: (updateData: { id: string; position: number }[]) => void;
-  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
-export const ApplicationList = ({
+export const SelectApplicationList = ({
   items,
   onReorder,
-  onEdit,
-}: ApplicationListProps) => {
+  onDelete,
+}: SelectApplicationListProps) => {
   const [isMounted, setIsMounted] = useState(false);
-  const [applications, setApplications] = useState(items);
+  const [selectQuestions, setSelectQuestions] = useState(items);
+
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    setApplications(items)
+    setSelectQuestions(items)
   }, [items])
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
-    const items = Array.from(applications)
+    const items = Array.from(selectQuestions)
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
@@ -46,7 +46,7 @@ export const ApplicationList = ({
 
     const updatedSurveys = items.slice(startIndex, endIndex + 1);
 
-    setApplications(items);
+    setSelectQuestions(items);
 
     const bulkUpdateData = updatedSurveys.map((survey) => ({
       id: survey.id,
@@ -56,6 +56,8 @@ export const ApplicationList = ({
     onReorder(bulkUpdateData);
   }
 
+
+
   if (!isMounted) {
     return null;
   }
@@ -64,10 +66,10 @@ export const ApplicationList = ({
       <Droppable droppableId="surveys">
         {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
-            {applications.map((application, index) => (
+            {selectQuestions.map((selectQuestion, index) => (
               <Draggable
-                key={application.id}
-                draggableId={application.id}
+                key={selectQuestion.id}
+                draggableId={selectQuestion.id}
                 index={index}
               >
                 {(provided) => (
@@ -84,22 +86,16 @@ export const ApplicationList = ({
                     >
                       <Grip className="h-5 w-5" />
                     </div>
-                    {application.position}：
-                    {application.question}
+                    {selectQuestion.position}：
+                    {selectQuestion.question}
                     <div className="ml-auto pr-2 flex items-center gap-x-2">
-                      {application.type ? (
-                        <Badge>
-                          S
-                        </Badge>
-                      ) : (
-                        <Badge>
-                          T
-                        </Badge>
-                      )}
-                      <Pencil
-                        onClick={() => onEdit(application.id)}
-                        className="w-4 h-4 cursor-pointer hover:opacity-75 transition"
-                      />
+                      {/* <Button
+                        onClick={() => onDelete(selectQuestion.id)}
+                        size="sm"
+                        variant="destructive"
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button> */}
                     </div>
                   </div>
                 )}

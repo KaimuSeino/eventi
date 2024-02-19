@@ -6,14 +6,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import QuestionForm from "./_components/question-form";
 import QuestionTypeForm from "./_components/question-type-form";
-import SelectQuestionForm from "./_components/select-question-form";
-import { SurveyAction } from "./_components/survey-actions";
-import QuestionResumeForm from "./_components/question-resume-form";
+import { ApplicationAction } from "./_components/application-actions";
+import SelectApplicationForm from "./_components/select-application-form";
 
-const SurveyIdPage = async ({
+const ApplicationIdPage = async ({
   params
 }: {
-  params: { eventId: string; surveyId: string }
+  params: { eventId: string; applicationId: string }
 }) => {
   const { userId } = auth();
 
@@ -21,13 +20,13 @@ const SurveyIdPage = async ({
     return redirect("/");
   }
 
-  const survey = await db.survey.findUnique({
+  const application = await db.application.findUnique({
     where: {
-      id: params.surveyId,
+      id: params.applicationId,
       eventId: params.eventId,
     },
     include: {
-      selectQuestions: {
+      selectUserApplication: {
         orderBy: {
           position: "asc"
         }
@@ -35,7 +34,7 @@ const SurveyIdPage = async ({
     }
   });
 
-  if (!survey) {
+  if (!application) {
     return redirect("/");
   }
 
@@ -53,12 +52,12 @@ const SurveyIdPage = async ({
           <div className="flex items-center justify-between w-full">
             <div className="flex flex-col gap-y-2">
               <h1 className="text-2xl font-medium">
-                アンケート
+                申し込みフォーム
               </h1>
             </div>
-            <SurveyAction
+            <ApplicationAction
               eventId={params.eventId}
-              surveyId={params.surveyId}
+              applicationId={params.applicationId}
             />
           </div>
         </div>
@@ -74,16 +73,16 @@ const SurveyIdPage = async ({
             </div>
             {/* question form */}
             <QuestionForm
-              initialData={survey}
+              initialData={application}
               eventId={params.eventId}
-              surveyId={params.surveyId}
+              applicationId={params.applicationId}
             />
             {/* select question form */}
-            {survey.type && (
-              <SelectQuestionForm
-                initialData={survey}
+            {application.type && (
+              <SelectApplicationForm
+                initialData={application}
                 eventId={params.eventId}
-                surveyId={params.surveyId}
+                applicationId={params.applicationId}
               />
             )}
           </div>
@@ -96,14 +95,9 @@ const SurveyIdPage = async ({
             </h2>
           </div>
           <QuestionTypeForm
-            initialData={survey}
+            initialData={application}
             eventId={params.eventId}
-            surveyId={params.surveyId}
-          />
-          <QuestionResumeForm
-            initialData={survey}
-            eventId={params.eventId}
-            surveyId={params.surveyId}
+            applicationId={params.applicationId}
           />
         </div>
       </div>
@@ -111,4 +105,4 @@ const SurveyIdPage = async ({
   );
 }
 
-export default SurveyIdPage;
+export default ApplicationIdPage;

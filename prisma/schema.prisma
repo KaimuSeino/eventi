@@ -110,8 +110,9 @@ model Application {
   eventId String
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-  question String?
+  question String
   position Int
+  type     Boolean @default(false)
 
   userApplication       UserApplication[]
   selectUserApplication SelectUserApplication[]
@@ -123,10 +124,12 @@ model Application {
 }
 
 model UserApplication {
-  id       String @id @default(uuid())
-  userId   String @unique
-  question String
-  position Int
+  id     String @id @default(uuid())
+  userId String @unique
+
+  textApplication   String?
+  selectApplication Int?
+  isCompleted       Boolean @default(false)
 
   applicationId String
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)

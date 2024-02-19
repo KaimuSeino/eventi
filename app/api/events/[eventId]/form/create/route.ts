@@ -4,57 +4,55 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { eventId: string } }
 ) {
   try {
     const { userId } = auth();
-    const { values, surveyId } = await req.json();
-    const { selectAnswer, textAnswer } = values
+    const { values, applicationId } = await req.json();
+    const { selectApplication, textApplication } = values
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const surveyOwner = await db.survey.findUnique({
+    const applicationOwner = await db.application.findUnique({
       where: {
-        id: surveyId
+        id: applicationId
       }
     });
 
-    if (!surveyOwner) {
+    if (!applicationOwner) {
       return new NextResponse("SurveyUnauthorized", { status: 401 });
     }
 
-    const userAnswer = await db.userAnswer.findFirst({
+    const userApplication = await db.userApplication.findFirst({
       where: {
         userId: userId,
-        surveyId: surveyId
+        applicationId: applicationId
       }
     });
 
-    if (!userAnswer) {
+    if (!userApplication) {
       return new NextResponse("UserAnswer Not Found", { status: 404 });
     }
 
-    const updatedUserAnswer = await db.userAnswer.update({
+    const updatedUserApplication = await db.userApplication.update({
       where: {
-        id: userAnswer.id
+        id: userApplication.id
       },
       data: {
-        selectAnswer: parseInt(selectAnswer),
-        textAnswer: textAnswer || null,
+        selectApplication: parseInt(selectApplication),
+        textApplication: textApplication || null,
       }
     });
 
-    return NextResponse.json(updatedUserAnswer);
+    return NextResponse.json(updatedUserApplication);
   } catch (error) {
-    console.log("[USER_SURVEY_ANSWERS]", error)
+    console.log("[USER_APPLICATION_ANSWERS]", error)
     return new NextResponse("Internal Error", { status: 500 })
   }
 }
 
 export async function POST(
-  req: Request,
   { params }: { params: { eventId: string } }
 ) {
   try {
@@ -64,7 +62,7 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const surveys = await db.survey.findMany({
+    const applications = await db.application.findMany({
       where: {
         eventId: params.eventId
       },
@@ -73,12 +71,12 @@ export async function POST(
       }
     });
 
-    if (surveys.length > 0) {
-      await Promise.all(surveys.map(async (survey) => {
+    if (applications.length > 0) {
+      await Promise.all(applications.map(async (application) => {
         await db.userAnswer.create({
           data: {
             userId: userId,
-            surveyId: survey.id,
+            surveyId: application.id,
             isCreated: true
           }
         });
@@ -88,7 +86,7 @@ export async function POST(
     return new NextResponse("Success", { status: 200 });
 
   } catch (error) {
-    console.log("[SURVEY_USER_CREATE]", error);
+    console.log("[USER_APPLICATION_CREATE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

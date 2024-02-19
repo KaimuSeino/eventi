@@ -46,3 +46,45 @@ export async function POST(
     return new NextResponse("Internal Error", { status: 500 })
   }
 }
+
+export async function PATCH(
+  { params }: { params: { eventId: string } }
+) {
+  try {
+    const { userId } = auth();
+
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 })
+    }
+
+    const userApplications = await db.userApplication.findMany({
+      where: {
+        application: {
+          eventId: params.eventId
+        },
+        userId: userId
+      },
+      select: {
+        id: true
+      }
+    });
+
+    if (userApplications.length > 0) {
+      await Promise.all(userApplications.map(async (userApplication) => {
+        await db.userApplication.update({
+          where: {
+            id: userApplication.id
+          },
+          data: {
+            isCompleted: true
+          }
+        });
+      }));
+    }
+
+    return new NextResponse("Success", { status: 200 });
+  } catch (error) {
+    console.log("[USER_APPLICATION_ERROR]", error);
+    return new NextResponse("Internal Error", { status: 500 })
+  }
+}
