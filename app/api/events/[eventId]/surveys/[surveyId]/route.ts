@@ -23,15 +23,6 @@ export async function DELETE(
     if (!event) {
       return new NextResponse("Not found", { status: 404 })
     }
-    const survey = await db.survey.findUnique({
-      where: {
-        id: params.surveyId,
-      }
-    })
-
-    if (!event) {
-      return new NextResponse("Not found", { status: 404 })
-    }
 
     const deleteSurvey = await db.survey.delete({
       where: {
@@ -42,7 +33,7 @@ export async function DELETE(
     return NextResponse.json(deleteSurvey)
 
   } catch (error) {
-    console.log("[SELECT_QUESTION_ID_DELETE]");
+    console.log("[SELECT_QUESTION_ID_DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 })
   }
 }

@@ -84,7 +84,7 @@ const SelectApplicationForm = ({
       setIsLoading(true);
 
       await axios.delete(`/api/events/${eventId}/form/${applicationId}/select-application/${selectApplicationId}`);
-      toast.success("選択質問が削除されました");
+      toast.success("選択フォームが削除されました");
       router.refresh();
       router.push(`/host/events/${eventId}/form/${applicationId}`);
     } catch (error) {

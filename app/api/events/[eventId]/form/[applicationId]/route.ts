@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 export async function DELETE(
+  req: Request,
   { params }: { params: { eventId: string, applicationId: string } }
 ) {
   try {
@@ -22,17 +23,8 @@ export async function DELETE(
     if (!event) {
       return new NextResponse("Not found", { status: 404 })
     }
-    const application = await db.application.findUnique({
-      where: {
-        id: params.applicationId,
-      }
-    })
 
-    if (!event) {
-      return new NextResponse("Not found", { status: 404 })
-    }
-
-    const deleteApplication = await db.survey.delete({
+    const deleteApplication = await db.application.delete({
       where: {
         id: params.applicationId
       }
@@ -41,7 +33,7 @@ export async function DELETE(
     return NextResponse.json(deleteApplication)
 
   } catch (error) {
-    console.log("[SELECT_APPLICATION_ID_DELETE]");
+    console.log("[SELECT_APPLICATION_ID_DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 })
   }
 }
@@ -55,7 +47,7 @@ export async function PATCH(
     const values = await req.json();
 
     if (!userId) {
-      return new NextResponse("Unautorized", { status: 401 })
+      return new NextResponse("Unauthorized", { status: 401 })
     }
 
     const ownEvents = await db.event.findUnique({
