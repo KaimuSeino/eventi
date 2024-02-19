@@ -7,6 +7,7 @@ import { getSurvey } from "@/actions/get-surveys";
 import { getUserSurveys } from "@/actions/get-user-surveys";
 import SurveyCompletedButton from "./_components/survey-completed.button";
 import Image from "next/image";
+import { getUserAnswerByEventId } from "@/data/userAnswer";
 
 const SurveyPage = async ({
   params
@@ -109,7 +110,7 @@ const SurveyPage = async ({
           })}
         </div>
         <div className="px-6 flex items-center">
-          <SurveyCompletedButton eventId={params.eventId} />
+          <SurveyCompletedButton eventId={params.eventId} userId={userId} />
           <p className="text-sm font-light pl-2">
             完了するとアンケートが送信され、あなたの活動が履歴に残ります。
           </p>

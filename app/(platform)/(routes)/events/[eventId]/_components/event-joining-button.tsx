@@ -31,8 +31,13 @@ const EventJoiningButton = ({
     }
   };
 
+  const changeApplicationForm = () => {
+    toast.success("申し込みフォームに移動しています。")
+    router.push(`/events/${eventId}/form`)
+  }
+
   return (
-    <ComfirmJoining onComfirm={handleRegistration}>
+    <ComfirmJoining onComfirm={changeApplicationForm}>
       <Button>
         参加申し込みをする
       </Button>

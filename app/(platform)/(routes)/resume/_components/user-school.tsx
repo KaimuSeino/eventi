@@ -13,7 +13,7 @@ const UserSchool = ({
 }: UserSchoolProps) => {
   return (
     <div>
-      <div className="flex my-2 gap-x-2">
+      <div className="flex flex-col md:flex-row items-center justify-start my-2 gap-x-2">
         {/* 名前などの基本情報 */}
         <div>
           大学名：

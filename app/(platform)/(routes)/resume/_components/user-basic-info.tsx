@@ -36,7 +36,7 @@ const UserBasicInfo = ({
 }: UserBasicInfoProps) => {
   const router = useRouter();
 
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -130,14 +130,14 @@ const UserBasicInfo = ({
               className="space-y-4 mt-4"
             >
               {/* 漢字 */}
-              <div className="flex items-center justify-around gap-x-3">
+              <div className="flex items-center md:justify-around gap-x-3">
                 <div className="w-full p-2">
                   <FormField
                     control={form.control}
                     name="lastName"
                     render={({ field }) => (
-                      <FormItem className="flex items-center gap-x-3">
-                        <FormLabel className="w-16">性</FormLabel>
+                      <FormItem className="flex items-center gap-x-2">
+                        <FormLabel>性</FormLabel>
                         <FormControl>
                           <Input
                             disabled={isSubmitting}
@@ -155,7 +155,7 @@ const UserBasicInfo = ({
                     name="firstName"
                     render={({ field }) => (
                       <FormItem className="flex items-center gap-x-3">
-                        <FormLabel className="w-16">
+                        <FormLabel>
                           名
                         </FormLabel>
                         <FormControl>
@@ -177,8 +177,11 @@ const UserBasicInfo = ({
                     control={form.control}
                     name="katakanaLastName"
                     render={({ field }) => (
-                      <FormItem className="flex items-center gap-x-3">
-                        <FormLabel className="w-16">性(カナ)</FormLabel>
+                      <FormItem className="flex items-center gap-x-2">
+                        <p className="flex flex-col">
+                          <FormLabel>性</FormLabel>
+                          <FormLabel className="w-8">カナ</FormLabel>
+                        </p>
                         <FormControl>
                           <Input
                             disabled={isSubmitting}
@@ -196,9 +199,10 @@ const UserBasicInfo = ({
                     name="katakanaFirstName"
                     render={({ field }) => (
                       <FormItem className="flex items-center gap-x-3">
-                        <FormLabel className="w-16">
-                          名(カナ)
-                        </FormLabel>
+                        <p className="flex flex-col">
+                          <FormLabel>性</FormLabel>
+                          <FormLabel className="w-8">カナ</FormLabel>
+                        </p>
                         <FormControl>
                           <Input
                             disabled={isSubmitting}
@@ -231,7 +235,7 @@ const UserBasicInfo = ({
                 />
               </div>
               {/* 学校 */}
-              <div className="flex items-center justify-around gap-x-3">
+              <div className="flex flex-col items-center justify-around gap-x-3">
                 <div className="w-full p-2">
                   <FormField
                     control={form.control}
