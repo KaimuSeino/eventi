@@ -61,6 +61,46 @@ model Event {
   @@fulltext([title])
 }
 
+model Form {
+  // フォームの一意識別子で、自動でインクリメント（）される。
+  id          Int      @id @default(autoincrement())
+  // フォームを作成したユーザーのIDを表す。
+  userId      String
+  createdAt   DateTime @default(now())
+  // フォームが公開されているかどうかを表すブール値です。デフォルトはfalseです。
+  published   Boolean  @default(false)
+  // フォームの名前です。
+  name        String
+  // フォームの説明です。デフォルトは空文字列です。
+  description String   @default("")
+  // フォームの内容を表す文字列です。デフォルトは空の配列を表す文字列"[]"です。
+  content     String   @default("[]")
+
+  // フォームが訪問された回数です。デフォルトは０です。
+  visits      Int @default(0)
+  // フォームに対して送信された回数です。デフォルトは０です。
+  submissions Int @default(0)
+
+  // フォームを共有するための一意のURLです。デフォルトはUUIDです。
+  shareURL        String            @unique @default(uuid())
+  // FormモデルとFormSubmissionsモデルの間のリレーションを表します。一つのフォームは複数の提出物を持つことができます。
+  FormSubmissions FormSubmissions[]
+
+  @@unique([name, userId])
+}
+
+model FormSubmissions {
+  // @default(autoincrement())は、新しいエントリがデータベースに追加されるたびに、このフィールドの値が自動的にインクリメントされることを意味します。
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  formId    Int
+  form      Form     @relation(fields: [formId], references: [id])
+
+  content String
+
+  @@index([formId])
+}
+
 model Category {
   id    String  @id @default(uuid())
   name  String

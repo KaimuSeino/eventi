@@ -19,8 +19,8 @@ interface SurveySelectFormProps {
   surveyId: string;
   question: string;
   options: {
-    value: string
-    label: string
+    value: string;
+    label: string;
   }[]
 }
 
