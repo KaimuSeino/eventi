@@ -52,13 +52,32 @@ model Event {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Comment      Comment[]
-  UserJoining  UserJoining[]
-  surveys      Survey[]
-  applications Application[]
+  Comment     Comment[]
+  UserJoining UserJoining[]
+  surveys     Survey[]
+  Applicant   Applicant[]
 
   @@index([categoryId])
   @@fulltext([title])
+}
+
+model Applicant {
+  id           Int      @id @default(autoincrement())
+  userId       String
+  name         String
+  nameKana     String
+  email        String   @unique
+  school       String
+  grade        String
+  fieldOfStudy String
+  prefecture   String
+  // referrer     String?
+  createdAt    DateTime @default(now())
+
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
 }
 
 model Form {
@@ -96,6 +115,7 @@ model FormSubmissions {
   formId    Int
   form      Form     @relation(fields: [formId], references: [id])
 
+  // 提出物の内容を格納するためのフィールド。このフィールドには、ユーザーがフォームに入力した回答やデータが文字列形式で保存される。
   content String
 
   @@index([formId])
@@ -134,8 +154,9 @@ model UserJoining {
   katakanaFirstName String?
   lastName          String?
   katakanaLastName  String?
-  userImage         String? @db.Text
-  emailAddress      String? @db.Text
+
+  userImage    String? @db.Text
+  emailAddress String? @db.Text
 
   isCompleted Boolean @default(false)
 
@@ -143,56 +164,6 @@ model UserJoining {
   updatedAt DateTime @updatedAt
 
   @@index([eventId])
-}
-
-model Application {
-  id      String @id @default(cuid())
-  eventId String
-  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
-
-  question String
-  position Int
-  type     Boolean @default(false)
-
-  userApplication       UserApplication[]
-  selectUserApplication SelectUserApplication[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([eventId])
-}
-
-model UserApplication {
-  id     String @id @default(uuid())
-  userId String @unique
-
-  textApplication   String?
-  selectApplication Int?
-  isCompleted       Boolean @default(false)
-
-  applicationId String
-  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, applicationId])
-  @@index([applicationId])
-}
-
-model SelectUserApplication {
-  id       String @id @default(uuid())
-  question String
-  position Int
-
-  applicationId String
-  Application   Application @relation(fields: [applicationId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([applicationId])
 }
 
 model Survey {

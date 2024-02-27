@@ -1,12 +1,14 @@
 import { db } from "@/lib/db";
-import { auth, currentUser } from "@clerk/nextjs"
+import { auth, clerkClient, currentUser } from "@clerk/nextjs"
 import { NextResponse } from "next/server"
 
 export async function POST(
   req: Request
 ) {
+  console.log("dddd")
   try {
     const { userId } = auth();
+    const values = await req.json();
     const user = await currentUser();
 
     if (!userId) {
@@ -16,8 +18,15 @@ export async function POST(
     const userInfo = await db.user.create({
       data: {
         userId: userId,
-        image: user?.imageUrl,
-        email: user?.emailAddresses[0].emailAddress
+        lastName: values.lastName,
+        firstName: values.firstName,
+        image: user?.imageUrl
+      }
+    })
+
+    await clerkClient.users.updateUserMetadata(userId, {
+      publicMetadata: {
+        onboarded: true,
       }
     })
 

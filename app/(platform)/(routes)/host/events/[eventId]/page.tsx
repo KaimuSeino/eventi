@@ -13,7 +13,6 @@ import { Banner } from "@/components/banner";
 import DateForm from "./_components/DateForm";
 import SurveyForm from "./_components/SurveyForm";
 import { getHostById } from "@/data/host";
-import ApplicationForm from "./_components/application-form";
 
 const EventIdPage = async ({
   params
@@ -34,11 +33,6 @@ const EventIdPage = async ({
     },
     include: {
       surveys: {
-        orderBy: {
-          position: "asc"
-        }
-      },
-      applications: {
         orderBy: {
           position: "asc"
         }
@@ -63,7 +57,6 @@ const EventIdPage = async ({
     event.categoryId,
     event.detail,
     event.datetime,
-    event.applications.find((application) => application.question),
     event.surveys.find((survey) => survey.question),
   ]
 
@@ -143,11 +136,6 @@ const EventIdPage = async ({
             />
             {/* 日程フォーム */}
             <DateForm
-              initialData={event}
-              eventId={event.id}
-            />
-            {/* 申し込みフォーム */}
-            <ApplicationForm
               initialData={event}
               eventId={event.id}
             />
