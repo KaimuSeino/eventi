@@ -59,7 +59,13 @@ export default function Home() {
               </a>
             </div>
             <div>
-              <img src="/logo.png" alt="" width={300} height={300} className="mx-auto mt-24 md:mt-0 animate-spin-reverse" />
+              <Image
+                src="/logo.png"
+                width={300}
+                height={300}
+                alt="logo"
+                className="mx-auto mt-24 md:mt-0 animate-spin-reverse"
+              />
             </div>
           </div>
         </div>
