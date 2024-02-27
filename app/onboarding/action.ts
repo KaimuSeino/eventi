@@ -18,6 +18,16 @@ const formSchema = z.object({
   }).min(1, {
     message: "入力してください"
   }),
+  katakanaFirstName: z.string({
+    required_error: "入力は必須です"
+  }).min(1, {
+    message: "入力してください"
+  }),
+  katakanaLastName: z.string({
+    required_error: "入力は必須です"
+  }).min(1, {
+    message: "入力してください"
+  })
 });
 
 export const createUser = async (validatedData: FormData) => {
@@ -33,11 +43,16 @@ export const createUser = async (validatedData: FormData) => {
   const userData = formSchema.parse({
     firstName: validatedData.get('firstName'),
     lastName: validatedData.get('lastName'),
+    katakanaFirstName: validatedData.get("katakanaFirstName"),
+    katakanaLastName: validatedData.get("katakanaLastName"),
   });
 
   const data: Prisma.UserUncheckedCreateInput = {
     firstName: userData.firstName,
     lastName: userData.lastName,
+    katakanaFirstName: userData.katakanaFirstName,
+    katakanaLastName: userData.katakanaLastName,
+    email: user?.emailAddresses[0].emailAddress,
     image: user?.imageUrl || "",
     userId
   }

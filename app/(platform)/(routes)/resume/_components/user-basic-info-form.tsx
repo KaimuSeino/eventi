@@ -139,7 +139,7 @@ const UserBasicInfo = ({
                       control={form.control}
                       name="lastName"
                       render={({ field }) => (
-                        <FormItem className="flex items-center gap-x-2">
+                        <FormItem className="flex flex-col justify-center gap-x-2">
                           <FormLabel>性</FormLabel>
                           <FormControl>
                             <Input
@@ -157,7 +157,7 @@ const UserBasicInfo = ({
                       control={form.control}
                       name="firstName"
                       render={({ field }) => (
-                        <FormItem className="flex items-center gap-x-3">
+                        <FormItem className="flex flex-col justify-center gap-x-3">
                           <FormLabel>
                             名
                           </FormLabel>
@@ -180,15 +180,12 @@ const UserBasicInfo = ({
                       control={form.control}
                       name="katakanaLastName"
                       render={({ field }) => (
-                        <FormItem className="flex items-center gap-x-2">
-                          <p className="flex flex-col">
-                            <FormLabel>性</FormLabel>
-                            <FormLabel className="w-8">カナ</FormLabel>
-                          </p>
+                        <FormItem className="flex flex-col justify-center gap-x-2">
+                          <FormLabel>セイ</FormLabel>
                           <FormControl>
                             <Input
                               disabled={isSubmitting}
-                              placeholder="性(カナ)"
+                              placeholder="セイ"
                               {...field}
                             />
                           </FormControl>
@@ -201,15 +198,12 @@ const UserBasicInfo = ({
                       control={form.control}
                       name="katakanaFirstName"
                       render={({ field }) => (
-                        <FormItem className="flex items-center gap-x-3">
-                          <p className="flex flex-col">
-                            <FormLabel>性</FormLabel>
-                            <FormLabel className="w-8">カナ</FormLabel>
-                          </p>
+                        <FormItem className="flex flex-col justify-center gap-x-3">
+                          <FormLabel className="w-auto">メイ</FormLabel>
                           <FormControl>
                             <Input
                               disabled={isSubmitting}
-                              placeholder="名（カナ）"
+                              placeholder="メイ"
                               {...field}
                             />
                           </FormControl>
@@ -228,7 +222,7 @@ const UserBasicInfo = ({
                         <FormLabel className="w-full">メールアドレス</FormLabel>
                         <FormControl>
                           <Input
-                            disabled={isSubmitting}
+                            disabled={true}
                             placeholder="eventi@example.com"
                             {...field}
                           />
