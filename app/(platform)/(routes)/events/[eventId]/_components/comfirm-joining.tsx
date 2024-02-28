@@ -31,14 +31,8 @@ export const ComfirmJoining = ({
         <AlertDialogHeader>
           <AlertDialogTitle>参加申し込みを開始します！</AlertDialogTitle>
           <AlertDialogDescription>
-            申し込みボタンを押すことで申し込みフォームに移動します。
-            <p className="text-sm">
-              ＊先にプロフィールを完成させると、申し込みがスムーズになります。
-            </p>
+            申し込みフォームに移動します
             <Link href="/resume">
-              <p className="text-slate-400 hover:text-slate-800">
-                マイページに移動する
-              </p>
             </Link>
           </AlertDialogDescription>
         </AlertDialogHeader>

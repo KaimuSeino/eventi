@@ -35,10 +35,10 @@ import { prefectures } from "@/data/seeds";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-
 interface ApplicantFormProps {
   eventId: string;
   user: User;
+  userId: string;
 }
 
 const formSchema = z.object({
@@ -76,6 +76,7 @@ const formSchema = z.object({
 const ApplicantForm = ({
   eventId,
   user,
+  userId,
 }: ApplicantFormProps) => {
   const router = useRouter();
 
@@ -101,7 +102,10 @@ const ApplicantForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      // applicantの保存
       await axios.post(`/api/events/${eventId}/applicant`, values);
+      // userJoiningの保存
+      await axios.post(`/api/events/${eventId}/joining`, { userId });
       toast.success("申し込みが完了しました！");
       router.push("/myboard");
     } catch (error) {

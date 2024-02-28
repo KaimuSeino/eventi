@@ -62,17 +62,18 @@ model Event {
 }
 
 model Applicant {
-  id           Int      @id @default(autoincrement())
+  id           Int    @id @default(autoincrement())
   userId       String
   name         String
   nameKana     String
-  email        String   @unique
+  image        String
+  email        String @unique
   school       String
   grade        String
   fieldOfStudy String
   prefecture   String
-  // referrer     String?
-  createdAt    DateTime @default(now())
+
+  createdAt DateTime @default(now())
 
   eventId String
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
@@ -150,10 +151,8 @@ model UserJoining {
   eventId String
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-  firstName         String?
-  katakanaFirstName String?
-  lastName          String?
-  katakanaLastName  String?
+  firstName String?
+  lastName  String?
 
   userImage    String? @db.Text
   emailAddress String? @db.Text

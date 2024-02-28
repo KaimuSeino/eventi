@@ -20,16 +20,17 @@ const EventJoiningButton = ({
   user,
 }: EventJoiningButtonProps) => {
   const router = useRouter();
-  const handleRegistration = async () => {
-    try {
-      await axios.post(`/api/events/${eventId}/joining`, { userId });
-      toast.success('参加申し込みが完了しました！');
-      router.refresh()
 
-    } catch (error) {
-      toast.error('すでに申し込んでいます。');
-    }
-  };
+  // const handleRegistration = async () => {
+  //   try {
+  //     await axios.post(`/api/events/${eventId}/joining`, { userId });
+  //     toast.success('参加申し込みが完了しました！');
+  //     router.refresh()
+
+  //   } catch (error) {
+  //     toast.error('すでに申し込んでいます。');
+  //   }
+  // };
 
   const changeApplicationForm = () => {
     toast.success("申し込みフォームに移動しています。")

@@ -1,11 +1,15 @@
 import { getApplicantByEmail } from "@/data/applicant";
 import { db } from "@/lib/db";
-import { auth } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(
+  req: Request,
+  { params }: { params: { eventId: string } }
+) {
   try {
     const { userId } = auth();
+    const user = await currentUser();
     const values = await req.json();
 
     if (!userId) {
@@ -19,7 +23,12 @@ export async function POST(req: Request) {
     }
 
     const applicant = await db.applicant.create({
-      data: { ...values, userId },
+      data: {
+        ...values,
+        userId,
+        eventId: params.eventId,
+        image: user?.imageUrl
+      },
     });
     return NextResponse.json(applicant);
   } catch (error) {

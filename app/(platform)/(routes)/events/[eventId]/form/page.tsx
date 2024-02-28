@@ -29,6 +29,7 @@ const ApplicationFormPage = async ({
           <ApplicantForm
             eventId={params.eventId}
             user={user!}
+            userId={userId}
           />
         ) : (
           <div>

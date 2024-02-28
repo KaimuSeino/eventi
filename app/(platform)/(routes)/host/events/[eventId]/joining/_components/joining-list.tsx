@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { auth } from "@clerk/nextjs"
 import { redirect } from "next/navigation";
 import JoiningCompletedButton from "./joining-completed-button";
+import { getApplicantsByEventId } from "@/data/applicant";
 
 export const JoiningList = async ({
   eventId
@@ -19,7 +20,9 @@ export const JoiningList = async ({
 
   const joinings = await getJoinings({
     eventId: eventId,
-  })
+  });
+
+  const applicants = await getApplicantsByEventId(eventId);
 
   return (
     <div>

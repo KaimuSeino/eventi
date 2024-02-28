@@ -34,9 +34,6 @@ export async function POST(
       data: {
         userId: userId,
         eventId: eventId,
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-        userImage: user?.imageUrl,
         emailAddress: user?.emailAddresses[0].emailAddress
       },
     });

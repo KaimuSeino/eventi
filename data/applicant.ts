@@ -11,3 +11,15 @@ export const getApplicantByEmail = async (email?: string) => {
     return null;
   }
 }
+
+export const getApplicantsByEventId = async (eventId?: string) => {
+  try {
+    const applicant = await db.applicant.findMany({
+      where: { eventId }
+    });
+
+    return applicant
+  } catch {
+    return null;
+  }
+}
