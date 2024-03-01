@@ -392,7 +392,7 @@ const ApplicantForm = ({
             type="submit"
             disabled={isSubmitting}
           >
-            保存
+            送信
           </Button>
         </div>
       </form>

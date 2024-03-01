@@ -2,6 +2,7 @@ import { getApplicantByEmail } from "@/data/applicant";
 import { db } from "@/lib/db";
 import { auth, currentUser } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
+import nodemailer from "nodemailer"
 
 export async function POST(
   req: Request,
@@ -30,6 +31,31 @@ export async function POST(
         image: user?.imageUrl
       },
     });
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      auth: {
+        user: process.env.GMAILUSER,
+        pass: process.env.GMAILPASSWORD,
+      },
+    })
+
+    const toUserMailData = {
+      from: "ksyki12b18@gmail.com",
+      to: values.email,
+      subject: `Eventi[申し込み完了のお知らせ]`,
+      text: `株式会社Eventiから${values.email}様へ`,
+      html: `
+        <p>イベント名</p>
+      `
+    }
+
+    transporter.sendMail(toUserMailData, function (err, info) {
+      if (err) console.log(err)
+      else console.log(info)
+    })
+
     return NextResponse.json(applicant);
   } catch (error) {
     console.log("APPLICANT", error);

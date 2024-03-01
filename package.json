@@ -36,6 +36,7 @@
     "date-fns": "^3.0.6",
     "lucide-react": "^0.302.0",
     "next": "14.0.4",
+    "nodemailer": "^6.9.10",
     "pica": "^9.0.1",
     "query-string": "^8.1.0",
     "rc-slider": "^9.7.1",
@@ -58,6 +59,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.14",
     "@types/pica": "^5.1.2",
     "@types/react": "^18",
     "@types/react-avatar-editor": "^13.0.2",
