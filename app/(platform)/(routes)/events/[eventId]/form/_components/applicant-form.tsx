@@ -108,6 +108,7 @@ const ApplicantForm = ({
       await axios.post(`/api/events/${eventId}/joining`, { userId });
       toast.success("申し込みが完了しました！");
       router.push("/myboard");
+      router.refresh();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         switch (error.response.status) {
