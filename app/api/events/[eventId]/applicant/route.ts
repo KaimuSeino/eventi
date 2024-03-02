@@ -1,8 +1,11 @@
 import { getApplicantByEmail } from "@/data/applicant";
+import Email from "@/emails";
 import { db } from "@/lib/db";
 import { auth, currentUser } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer"
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(
   req: Request,
@@ -32,28 +35,12 @@ export async function POST(
       },
     });
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.GMAILUSER,
-        pass: process.env.GMAILPASSWORD,
-      },
-    })
-
-    const toUserMailData = {
-      from: "ksyki12b18@gmail.com",
+    await resend.emails.send({
+      from: "onboarding@eventi.jp",
       to: values.email,
-      subject: `Eventi[申し込み完了のお知らせ]`,
-      text: `株式会社Eventiから${values.email}様へ`,
-      html: `
-        <p>イベント名</p>
-      `
-    }
-
-    transporter.sendMail(toUserMailData, function (err, info) {
-      if (err) console.log(err)
-      else console.log(info)
-    });
+      subject: "[参加申し込みについて]",
+      react: Email(),
+    })
 
     return NextResponse.json(applicant);
   } catch (error) {
