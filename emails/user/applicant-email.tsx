@@ -16,12 +16,14 @@ interface ApplicantEmailProps {
   image: string;
   name: string;
   eventTitle: string;
+  campany: string;
 }
 
 export default function ApplicantEmail({
   image,
   name,
   eventTitle,
+  campany,
 }: ApplicantEmailProps) {
   return (
     <Html>
@@ -40,7 +42,7 @@ export default function ApplicantEmail({
           />
           <Text style={paragraph} >{name} 様、</Text>
           <Text style={paragraph}>
-            イベントの申し込みが完了しました。主催者側からのアクションをお待ちください。
+            イベントの申し込みが完了しました。{campany}からのアクションをお待ちください。
           </Text>
           <Img
             src={image}

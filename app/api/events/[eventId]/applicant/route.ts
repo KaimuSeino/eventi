@@ -51,7 +51,7 @@ export async function POST(
     });
 
     await resend.emails.send({
-      from: "onboarding@eventi.jp",
+      from: "Eventi <onboarding@eventi.jp>",
       to: host.email!,
       subject: "[イベントに申し込みがありました]",
       react: ApplicantHostEmail({
@@ -63,13 +63,14 @@ export async function POST(
     })
 
     await resend.emails.send({
-      from: "onboarding@eventi.jp",
+      from: "Eventi <onboarding@eventi.jp>",
       to: values.email,
       subject: "[参加申し込みについて]",
       react: ApplicantEmail({
         image: event.imageUrl!,
         name: values.name,
         eventTitle: event.title,
+        campany: host.campany!,
       }),
     })
 
