@@ -19,26 +19,24 @@ const ApplicationFormPage = async ({
   const user = await getUserById(userId);
 
   return (
-    <div className="flex flex-col max-w-4xl mx-auto pb-20">
-      <div className="p-4">
-        <div className="flex flex-col items-center justify-center">
-          <h1 className="text-4xl font-semibold">{event?.title}</h1>
-          <h2>申し込みフォーム</h2>
-        </div>
-        {event ? (
+    <>
+      {
+        event ? (
           <ApplicantForm
             eventId={params.eventId}
             user={user!}
             userId={userId}
+            title={event.title}
           />
         ) : (
-          <div>
-            情報が取得されませんでした。
-          </div>
+          <div className="flex flex-col max-w-4xl mx-auto pb-20">
+            <div>
+              情報が取得されませんでした。
+            </div >
+          </div >
         )}
-      </div>
-    </div>
-  );
+    </>
+  )
 }
 
 export default ApplicationFormPage;

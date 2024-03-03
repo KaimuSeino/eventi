@@ -1,5 +1,8 @@
 import { getApplicantByEmail } from "@/data/applicant";
-import Email from "@/emails";
+import { getEventByEventId } from "@/data/event";
+import { getHostByEventId } from "@/data/host";
+import ApplicantHostEmail from "@/emails/host/applicant-host-email";
+import ApplicantEmail from "@/emails/user/applicant-email";
 import { db } from "@/lib/db";
 import { auth, currentUser } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
@@ -26,6 +29,18 @@ export async function POST(
       return new NextResponse(JSON.stringify({ message: "すでに登録されています" }), { status: 409 });
     }
 
+    const event = await getEventByEventId(params.eventId);
+
+    if (!event) {
+      return new NextResponse("event not found", { status: 409 }) // 書き方わかんない
+    }
+
+    const host = await getHostByEventId(params.eventId);
+
+    if (!host) {
+      return new NextResponse("host not found", { status: 409 }) // 書き方わかんない
+    }
+
     const applicant = await db.applicant.create({
       data: {
         ...values,
@@ -37,9 +52,25 @@ export async function POST(
 
     await resend.emails.send({
       from: "onboarding@eventi.jp",
+      to: host.email!,
+      subject: "[イベントに申し込みがありました]",
+      react: ApplicantHostEmail({
+        image: event.imageUrl!,
+        campany: host.campany!,
+        eventTitle: event.title,
+        eventId: event.id,
+      })
+    })
+
+    await resend.emails.send({
+      from: "onboarding@eventi.jp",
       to: values.email,
       subject: "[参加申し込みについて]",
-      react: Email(),
+      react: ApplicantEmail({
+        image: event.imageUrl!,
+        name: values.name,
+        eventTitle: event.title,
+      }),
     })
 
     return NextResponse.json(applicant);

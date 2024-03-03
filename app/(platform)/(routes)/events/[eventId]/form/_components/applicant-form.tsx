@@ -5,7 +5,7 @@ import { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react"
 import {
   Command,
   CommandEmpty,
@@ -34,11 +34,13 @@ import { fieldOfStudys } from "@/data/seeds";
 import { prefectures } from "@/data/seeds";
 import toast from "react-hot-toast";
 import axios from "axios";
+import Image from "next/image";
 
 interface ApplicantFormProps {
   eventId: string;
   user: User;
   userId: string;
+  title: string;
 }
 
 const formSchema = z.object({
@@ -73,12 +75,22 @@ const formSchema = z.object({
   }),
 })
 
+const returnTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "instant",
+  });
+};
+
 const ApplicantForm = ({
   eventId,
   user,
   userId,
+  title
 }: ApplicantFormProps) => {
   const router = useRouter();
+
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const [isGradePopoverOpen, setIsGradePopoverOpen] = useState(false);
   const [isFieldOfStudyPopoverOpen, setIsFieldOfStudyPopoverOpen] = useState(false);
@@ -102,6 +114,8 @@ const ApplicantForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      returnTop()
+      setIsUpdating(true);
       // applicantの保存
       await axios.post(`/api/events/${eventId}/applicant`, values);
       // userJoiningの保存
@@ -122,282 +136,307 @@ const ApplicantForm = ({
       } else {
         toast.error("何か問題が起きました！");
       }
+    } finally {
+      setIsUpdating(false);
     }
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 mt-4"
-      >
-        <div className="mt-4 border bg-slate-100 rounded-md p-4">
-          <p className="font-medium pb-2">名前</p>
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    disabled={isSubmitting}
-                    placeholder="名前"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+    <>
+      {isUpdating && (
+        <div className="absolute h-lvh w-screen top-0 right-0 flex items-center justify-center">
+          <Image
+            className="h-8 w-8 animate-spin-reverse-early"
+            src="/logo.png"
+            alt="logo"
+            width={50}
+            height={50}
           />
         </div>
-        <div className="mt-4 border bg-slate-100 rounded-md p-4">
-          <p className="font-medium pb-2">フリガナ</p>
-          <FormField
-            control={form.control}
-            name="nameKana"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    disabled={isSubmitting}
-                    placeholder="フリガナ"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      )}
+      <div className="flex flex-col max-w-4xl mx-auto pb-20">
+        <div className="flex flex-col items-center justify-center">
+          <h1 className="text-4xl font-semibold">{title}</h1>
+          <h2>申し込みフォーム</h2>
         </div>
-        <div className="mt-4 border bg-slate-100 rounded-md p-4">
-          <p className="font-medium pb-2">メールアドレス</p>
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    disabled={isSubmitting}
-                    placeholder="eventi@example.com"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="mt-4 border bg-slate-100 rounded-md p-4">
-          <p className="font-medium pb-2">学校名</p>
-          <FormField
-            control={form.control}
-            name="school"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    disabled={isSubmitting}
-                    placeholder="〇〇大学"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="flex items-center justify-between  md:justify-start space-x-5 mt-4 border bg-slate-100 rounded-md p-4">
-          <p className="font-medium pb-2">学年</p>
-          <FormField
-            control={form.control}
-            name="grade"
-            render={({ field }) => (
-              <FormItem>
-                <Popover open={isGradePopoverOpen} onOpenChange={setIsGradePopoverOpen}>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "w-[200px] justify-between",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value
-                          ? grades.find(
-                            (grade) => grade.value === field.value
-                          )?.label
-                          : "学年を選択"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandEmpty>学年が選択されていません</CommandEmpty>
-                      <CommandGroup className="max-h-[150px] overflow-y-auto">
-                        {grades.map((grade) => (
-                          <CommandItem
-                            value={grade.label}
-                            key={grade.value}
-                            onSelect={() => {
-                              form.setValue("grade", grade.value)
-                              setIsGradePopoverOpen(false);
-                            }}
-                          >
-                            <Check
+        <Form {...form} >
+          <div className="p-4">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 mt-4"
+            >
+              <div className="mt-4 border bg-slate-100 rounded-md p-4">
+                <p className="font-medium pb-2">名前</p>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          disabled={isSubmitting}
+                          placeholder="名前"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="mt-4 border bg-slate-100 rounded-md p-4">
+                <p className="font-medium pb-2">フリガナ</p>
+                <FormField
+                  control={form.control}
+                  name="nameKana"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          disabled={isSubmitting}
+                          placeholder="フリガナ"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="mt-4 border bg-slate-100 rounded-md p-4">
+                <p className="font-medium pb-2">メールアドレス</p>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          disabled={isSubmitting}
+                          placeholder="eventi@example.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="mt-4 border bg-slate-100 rounded-md p-4">
+                <p className="font-medium pb-2">学校名</p>
+                <FormField
+                  control={form.control}
+                  name="school"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          disabled={isSubmitting}
+                          placeholder="〇〇大学"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex items-center justify-between  md:justify-start space-x-5 mt-4 border bg-slate-100 rounded-md p-4">
+                <p className="font-medium pb-2">学年</p>
+                <FormField
+                  control={form.control}
+                  name="grade"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Popover open={isGradePopoverOpen} onOpenChange={setIsGradePopoverOpen}>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
                               className={cn(
-                                "mr-2 h-4 w-4",
-                                grade.value === field.value
-                                  ? "opacity-100"
-                                  : "opacity-0"
+                                "w-[200px] justify-between",
+                                !field.value && "text-muted-foreground"
                               )}
-                            />
-                            {grade.label}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="flex items-center justify-between  md:justify-start space-x-5 mt-4 border bg-slate-100 rounded-md p-4">
-          <p className="font-medium pb-2">専攻分野</p>
-          <FormField
-            control={form.control}
-            name="fieldOfStudy"
-            render={({ field }) => (
-              <FormItem>
-                <Popover open={isFieldOfStudyPopoverOpen} onOpenChange={setIsFieldOfStudyPopoverOpen}>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "w-[200px] justify-between",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value
-                          ? fieldOfStudys.find(
-                            (fieldOfStudy) => fieldOfStudy.value === field.value
-                          )?.label
-                          : "専攻分野を選択"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandEmpty>専攻分野が選択されていません</CommandEmpty>
-                      <CommandGroup className="max-h-[150px] overflow-y-auto">
-                        {fieldOfStudys.map((fieldOfStudy) => (
-                          <CommandItem
-                            value={fieldOfStudy.label}
-                            key={fieldOfStudy.value}
-                            onSelect={() => {
-                              form.setValue("fieldOfStudy", fieldOfStudy.value)
-                              setIsFieldOfStudyPopoverOpen(false);
-                            }}
-                          >
-                            <Check
+                            >
+                              {field.value
+                                ? grades.find(
+                                  (grade) => grade.value === field.value
+                                )?.label
+                                : "学年を選択"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                          <Command>
+                            <CommandEmpty>学年が選択されていません</CommandEmpty>
+                            <CommandGroup className="max-h-[150px] overflow-y-auto">
+                              {grades.map((grade) => (
+                                <CommandItem
+                                  value={grade.label}
+                                  key={grade.value}
+                                  onSelect={() => {
+                                    form.setValue("grade", grade.value)
+                                    setIsGradePopoverOpen(false);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      grade.value === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {grade.label}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex items-center justify-between  md:justify-start space-x-5 mt-4 border bg-slate-100 rounded-md p-4">
+                <p className="font-medium pb-2">専攻分野</p>
+                <FormField
+                  control={form.control}
+                  name="fieldOfStudy"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Popover open={isFieldOfStudyPopoverOpen} onOpenChange={setIsFieldOfStudyPopoverOpen}>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
                               className={cn(
-                                "mr-2 h-4 w-4",
-                                fieldOfStudy.value === field.value
-                                  ? "opacity-100"
-                                  : "opacity-0"
+                                "w-[200px] justify-between",
+                                !field.value && "text-muted-foreground"
                               )}
-                            />
-                            {fieldOfStudy.label}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="flex items-center justify-between  md:justify-start space-x-5 mt-4 border bg-slate-100 rounded-md p-4">
-          <p className="font-medium pb-2">出身地(都道府県)</p>
-          <FormField
-            control={form.control}
-            name="prefecture"
-            render={({ field }) => (
-              <FormItem>
-                <Popover open={isPrefecturePopoverOpen} onOpenChange={setIsPrefecturePopoverOpen}>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "w-[200px] justify-between",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value
-                          ? prefectures.find(
-                            (prefecture) => prefecture.value === field.value
-                          )?.label
-                          : "出身地を選択"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandInput placeholder="出身地を検索" />
-                      <CommandEmpty>出身地が選択されていません</CommandEmpty>
-                      <CommandGroup className="max-h-[150px] overflow-y-auto">
-                        {prefectures.map((prefecture) => (
-                          <CommandItem
-                            value={prefecture.label}
-                            key={prefecture.value}
-                            onSelect={() => {
-                              form.setValue("prefecture", prefecture.value)
-                              setIsPrefecturePopoverOpen(false);
-                            }}
-                          >
-                            <Check
+                            >
+                              {field.value
+                                ? fieldOfStudys.find(
+                                  (fieldOfStudy) => fieldOfStudy.value === field.value
+                                )?.label
+                                : "専攻分野を選択"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                          <Command>
+                            <CommandEmpty>専攻分野が選択されていません</CommandEmpty>
+                            <CommandGroup className="max-h-[150px] overflow-y-auto">
+                              {fieldOfStudys.map((fieldOfStudy) => (
+                                <CommandItem
+                                  value={fieldOfStudy.label}
+                                  key={fieldOfStudy.value}
+                                  onSelect={() => {
+                                    form.setValue("fieldOfStudy", fieldOfStudy.value)
+                                    setIsFieldOfStudyPopoverOpen(false);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      fieldOfStudy.value === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {fieldOfStudy.label}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex items-center justify-between  md:justify-start space-x-5 mt-4 border bg-slate-100 rounded-md p-4">
+                <p className="font-medium pb-2">出身地(都道府県)</p>
+                <FormField
+                  control={form.control}
+                  name="prefecture"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Popover open={isPrefecturePopoverOpen} onOpenChange={setIsPrefecturePopoverOpen}>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
                               className={cn(
-                                "mr-2 h-4 w-4",
-                                prefecture.value === field.value
-                                  ? "opacity-100"
-                                  : "opacity-0"
+                                "w-[200px] justify-between",
+                                !field.value && "text-muted-foreground"
                               )}
-                            />
-                            {prefecture.label}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="flex items-center justify-end">
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-          >
-            送信
-          </Button>
-        </div>
-      </form>
-    </Form >
+                            >
+                              {field.value
+                                ? prefectures.find(
+                                  (prefecture) => prefecture.value === field.value
+                                )?.label
+                                : "出身地を選択"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                          <Command>
+                            <CommandInput placeholder="出身地を検索" />
+                            <CommandEmpty>出身地が選択されていません</CommandEmpty>
+                            <CommandGroup className="max-h-[150px] overflow-y-auto">
+                              {prefectures.map((prefecture) => (
+                                <CommandItem
+                                  value={prefecture.label}
+                                  key={prefecture.value}
+                                  onSelect={() => {
+                                    form.setValue("prefecture", prefecture.value)
+                                    setIsPrefecturePopoverOpen(false);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      prefecture.value === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {prefecture.label}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex items-center justify-end">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  送信
+                </Button>
+              </div>
+            </form>
+          </div>
+        </Form >
+      </div>
+    </>
+
+
   );
 }
 
