@@ -12,8 +12,10 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { SignOutButton } from "@/components/auth/signout-button";
-import { MyBoardRoute, MyPageRoute, SearchRoute } from "@/components/user-button-route";
+import { HostEventPageRoute, HostProfilePageRoute, MyBoardRoute, MyPageRoute, SearchRoute } from "@/components/user-button-route";
 import { User } from "@prisma/client";
+import { Compass, Layout, List, LogOut, User as U } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 interface UserButtonProps {
   userInfo: User | null;
@@ -24,6 +26,8 @@ export const UserButton = ({
   userInfo
 }: UserButtonProps) => {
   const { user } = useUser();
+  const pathname = usePathname();
+  const isHostPage = pathname.includes("/host");
 
   const userImage = userInfo?.image
 
@@ -35,24 +39,41 @@ export const UserButton = ({
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40" align="end">
-        <MyBoardRoute>
-          <DropdownMenuItem>
-            マイボード
-          </DropdownMenuItem>
-        </MyBoardRoute>
-        <SearchRoute>
-          <DropdownMenuItem>
-            イベントを探す
-          </DropdownMenuItem>
-        </SearchRoute>
-        <MyPageRoute>
-          <DropdownMenuItem>
-            マイページ
-          </DropdownMenuItem>
-        </MyPageRoute>
+        {isHostPage ? (
+          <>
+            <HostEventPageRoute>
+              <DropdownMenuItem>
+                <List className="h-5 w-5 mr-1" />イベント
+              </DropdownMenuItem>
+            </HostEventPageRoute>
+            <HostProfilePageRoute>
+              <DropdownMenuItem>
+                <U className="h-5 w-5 mr-1" />プロフィール
+              </DropdownMenuItem>
+            </HostProfilePageRoute>
+          </>
+        ) : (
+          <>
+            <MyBoardRoute>
+              <DropdownMenuItem>
+                <Layout className="h-5 w-5 mr-1" />マイボード
+              </DropdownMenuItem>
+            </MyBoardRoute>
+            <SearchRoute>
+              <DropdownMenuItem>
+                <Compass className="h-5 w-5 mr-1" />イベントを探す
+              </DropdownMenuItem>
+            </SearchRoute>
+            <MyPageRoute>
+              <DropdownMenuItem>
+                <U className="h-5 w-5 mr-1" />マイページ
+              </DropdownMenuItem>
+            </MyPageRoute>
+          </>
+        )}
         <SignOutButton>
           <DropdownMenuItem>
-            ログアウト
+            <LogOut className="h-5 w-5 mr-1" />ログアウト
           </DropdownMenuItem>
         </SignOutButton>
       </DropdownMenuContent>

@@ -4,10 +4,10 @@ const Logo = () => {
   return (
     <div>
       <Image
-        height={40}
-        width={40}
+        height={20}
+        width={170}
         alt="logo"
-        src="/logo.png"
+        src="/Eventi.png"
       />
     </div>
   );

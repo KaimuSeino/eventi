@@ -53,3 +53,36 @@ export const MyPageRoute = ({
     </span>
   )
 }
+
+export const HostEventPageRoute = ({
+  children
+}: UserButtonRoute) => {
+  const router = useRouter();
+
+  const onClick = () => {
+    router.push("/host/events");
+  }
+
+  return (
+    <span onClick={onClick} className="cursor-pointer">
+      {children}
+    </span>
+  )
+}
+
+export const HostProfilePageRoute = ({
+  children
+}: UserButtonRoute) => {
+  const router = useRouter();
+
+  const onClick = () => {
+    router.push("/host/profile");
+  }
+
+  return (
+    <span onClick={onClick} className="cursor-pointer">
+      {children}
+    </span>
+  )
+}
+

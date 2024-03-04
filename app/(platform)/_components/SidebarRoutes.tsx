@@ -38,7 +38,7 @@ const hostRoutes = [
 const SidebarRoutes = () => {
   const pathname = usePathname()
 
-  const isHostPage = pathname?.includes("/host")
+  const isHostPage = pathname.includes("/host")
 
   const routes = isHostPage ? hostRoutes : guestRoutes
   return (
