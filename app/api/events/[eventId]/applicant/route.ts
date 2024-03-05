@@ -1,4 +1,4 @@
-import { getApplicantByEmail } from "@/data/applicant";
+import { getApplicantByEmailAndEventId } from "@/data/applicant";
 import { getEventByEventId } from "@/data/event";
 import { getHostByEventId } from "@/data/host";
 import ApplicantHostEmail from "@/emails/host/applicant-host-email";
@@ -23,7 +23,7 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const existingApplicant = await getApplicantByEmail(values.email);
+    const existingApplicant = await getApplicantByEmailAndEventId(values.email, params.eventId);
 
     if (existingApplicant) {
       return new NextResponse(JSON.stringify({ message: "すでに登録されています" }), { status: 409 });
@@ -32,13 +32,13 @@ export async function POST(
     const event = await getEventByEventId(params.eventId);
 
     if (!event) {
-      return new NextResponse("event not found", { status: 409 }) // 書き方わかんない
+      return new NextResponse("not found", { status: 404 }) // 書き方わかんない
     }
 
     const host = await getHostByEventId(params.eventId);
 
     if (!host) {
-      return new NextResponse("host not found", { status: 409 }) // 書き方わかんない
+      return new NextResponse("not found", { status: 404 }) // 書き方わかんない
     }
 
     const applicant = await db.applicant.create({

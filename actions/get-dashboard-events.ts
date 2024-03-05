@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { Event, UserJoining } from "@prisma/client";
+import { Event } from "@prisma/client";
 
 // EventWithCategory 型を定義
 export type EventWithCategory = Event & {
@@ -7,7 +7,7 @@ export type EventWithCategory = Event & {
     id: string;
     name: string;
   } | null;
-  isCompleted: boolean;
+  isAttendance: boolean;
 };
 
 type DashboardEvents = {
@@ -17,7 +17,7 @@ type DashboardEvents = {
 
 export const getDashboardEvents = async (userId: string): Promise<DashboardEvents> => {
   try {
-    const userJoinings = await db.userJoining.findMany({
+    const userJoinings = await db.applicant.findMany({
       where: {
         userId: userId
       },
@@ -33,17 +33,17 @@ export const getDashboardEvents = async (userId: string): Promise<DashboardEvent
     // EventWithCategory 型にキャスト
     const events = userJoinings.map(joining => ({
       ...joining.event,
-      isCompleted: joining.isCompleted
+      isAttendance: joining.isAttendance
     }) as EventWithCategory);
 
     const completedEvents = events.filter(event => {
       const joiningRecord = userJoinings.find(joining => joining.eventId === event.id);
-      return joiningRecord?.isCompleted;
+      return joiningRecord?.isAttendance;
     });
 
     const eventsInProgress = events.filter(event => {
       const joiningRecord = userJoinings.find(joining => joining.eventId === event.id);
-      return !joiningRecord?.isCompleted;
+      return !joiningRecord?.isAttendance;
     });
 
     return {

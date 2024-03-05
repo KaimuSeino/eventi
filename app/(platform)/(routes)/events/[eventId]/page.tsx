@@ -17,6 +17,7 @@ import { getUserSurveys } from "@/actions/get-user-surveys";
 import { getUser } from "@/actions/get-user";
 import { getHostByEventId, getHostById } from "@/data/host";
 import EventHost from "./_components/event-host";
+import { getApplicantByUserIdAndEventId } from "@/data/applicant";
 
 const EventIdPage = async ({
   params
@@ -38,10 +39,7 @@ const EventIdPage = async ({
     params.eventId
   )
 
-  const joining = await getJoining({
-    eventId: params.eventId,
-    userId: userId
-  })
+  const Attendance = await getApplicantByUserIdAndEventId(userId, params.eventId);
 
   const surveys = await getSurvey({
     eventId: params.eventId
@@ -86,9 +84,9 @@ const EventIdPage = async ({
               {event.title}
             </h2>
             <div>
-              {joining ? (
+              {Attendance ? (
                 <div className="flex items-center gap-x-2">
-                  {joining.isCompleted === true ? (
+                  {Attendance.isAttendance === true ? (
                     <>
                       <div className="bg-green-500 text-white text-xs px-3 py-1 rounded">
                         参加完了

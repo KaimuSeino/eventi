@@ -17,7 +17,7 @@ export const getUserActions = async ({
   try {
     const userActions = await db.event.findMany({
       where: {
-        UserJoining: {
+        Applicant: {
           some: {
             userId: userId,
           }

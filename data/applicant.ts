@@ -1,9 +1,9 @@
 import { db } from "@/lib/db"
 
-export const getApplicantByEmail = async (email?: string) => {
+export const getApplicantByEmailAndEventId = async (email?: string, eventId?: string) => {
   try {
-    const applicant = await db.applicant.findUnique({
-      where: { email }
+    const applicant = await db.applicant.findFirst({
+      where: { email, eventId }
     });
 
     return applicant;
@@ -11,6 +11,19 @@ export const getApplicantByEmail = async (email?: string) => {
     return null;
   }
 }
+
+export const getApplicantByUserIdAndEventId = async (userId?: string, eventId?: string) => {
+  try {
+    const applicant = await db.applicant.findFirst({
+      where: { userId, eventId }
+    });
+
+    return applicant;
+  } catch {
+    return null;
+  }
+}
+
 
 export const getApplicantsByEventId = async (eventId?: string) => {
   try {

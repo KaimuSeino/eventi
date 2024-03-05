@@ -52,10 +52,9 @@ model Event {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Comment     Comment[]
-  UserJoining UserJoining[]
-  surveys     Survey[]
-  Applicant   Applicant[]
+  Comment   Comment[]
+  surveys   Survey[]
+  Applicant Applicant[]
 
   @@index([categoryId])
   @@fulltext([title])
@@ -67,7 +66,7 @@ model Applicant {
   name         String
   nameKana     String
   image        String
-  email        String @unique
+  email        String
   school       String
   grade        String
   fieldOfStudy String
@@ -77,6 +76,8 @@ model Applicant {
 
   eventId String
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  isAttendance Boolean @default(false)
 
   @@index([eventId])
 }
@@ -137,27 +138,6 @@ model Comment {
   userImage    String? @db.Text
   emailAddress String? @db.Text
   userName     String? @db.Text
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([eventId])
-}
-
-model UserJoining {
-  id     String @id @default(uuid())
-  userId String
-
-  eventId String
-  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
-
-  firstName String?
-  lastName  String?
-
-  userImage    String? @db.Text
-  emailAddress String? @db.Text
-
-  isCompleted Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -1,25 +1,11 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button"
 import { Applicant } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import {
   ArrowUpDown,
-  MoreHorizontal,
-  Pencil,
-  UserCheck,
-  FileCheck,
 } from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import Link from "next/link"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import AttendanceConfirmationButton from "./attendance-confirmation-button"
 
@@ -34,7 +20,7 @@ export const columns: ColumnDef<Applicant>[] = [
       )
     },
     cell: ({ row }) => {
-      const iconImage = row.getValue("image") || ""
+      const iconImage = row.getValue("image") || null;
       return (
         <>
           <Avatar className="h-10 w-10">
@@ -137,11 +123,15 @@ export const columns: ColumnDef<Applicant>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const userId = row.getValue("userId") || null
+      const userId = row.original.userId;
+      const eventId = row.original.eventId;
 
       return (
         <>
-          <AttendanceConfirmationButton />
+          <AttendanceConfirmationButton
+            eventId={eventId}
+            userId={userId}
+          />
         </>
       )
     }

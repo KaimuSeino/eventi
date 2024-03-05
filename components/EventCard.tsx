@@ -10,7 +10,7 @@ interface EventCardProps {
   imageUrl: string;
   datetime: Date;
   category: string;
-  isCompleted: boolean;
+  isAttendance: boolean;
 }
 
 export const EventCard = ({
@@ -20,7 +20,7 @@ export const EventCard = ({
   imageUrl,
   datetime,
   category,
-  isCompleted,
+  isAttendance,
 }: EventCardProps) => {
   const formattedDate = datetime.toLocaleDateString("ja-JP");
 
@@ -54,8 +54,8 @@ export const EventCard = ({
             </div>
           </div>
           <div className="flex flex-col pt-2">
-            {typeof isCompleted === 'boolean' && (  // isCompletedがboolean型（trueまたはfalse）の場合のみ表示
-              isCompleted ? (
+            {typeof isAttendance === 'boolean' && (  // isCompletedがboolean型（trueまたはfalse）の場合のみ表示
+              isAttendance ? (
                 <span className="bg-green-500 text-white text-xs px-2 py-1 rounded">完了</span>
               ) : (
                 <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded">進行中</span>

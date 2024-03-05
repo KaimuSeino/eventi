@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { JoiningList } from "./_components/joining-list";
 import { columns } from "./_components/columns"
 import { DataTable } from "./_components/data-table";
 import { getApplicantsByEventId } from "@/data/applicant";
