@@ -1,9 +1,9 @@
-import { Category, Event, UserJoining } from "@prisma/client"
+import { Category, Event } from "@prisma/client"
 import { EventCard } from "./EventCard";
 
 export type EventWithCategory = Event & {
   category: Category | null;
-  isCompleted: boolean;
+  isAttendance: boolean;
 }
 
 interface EventsListProps {
@@ -25,7 +25,7 @@ const EventsList = ({
             imageUrl={item.imageUrl!}
             datetime={item.datetime!}
             category={item?.category?.name!}
-            isCompleted={item?.isCompleted}
+            isAttendance={item?.isAttendance}
           />
         ))}
       </div>
