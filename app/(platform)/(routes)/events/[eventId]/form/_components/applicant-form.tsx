@@ -118,8 +118,6 @@ const ApplicantForm = ({
       setIsUpdating(true);
       // applicantの保存
       await axios.post(`/api/events/${eventId}/applicant`, values);
-      // userJoiningの保存
-      await axios.post(`/api/events/${eventId}/joining`, { userId });
       toast.success("申し込みが完了しました！");
       router.push("/myboard");
       router.refresh();
