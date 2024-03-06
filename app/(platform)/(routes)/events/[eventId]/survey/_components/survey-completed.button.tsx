@@ -30,7 +30,20 @@ const SurveyCompletedButton = ({
       router.push(`/resume`)
       router.refresh()
     } catch (error) {
-      toast.error("何か問題起きちゃった！！")
+      if (axios.isAxiosError(error) && error.response) {
+        switch (error.response.status) {
+          case 409:
+            toast.error("全ての質問に回答または保存ができていません")
+            break;
+          default:
+            toast.error("何か問題が起きました")
+            break;
+        }
+      } else {
+        toast.error("何か問題起きちゃった！！")
+      }
+    } finally {
+      setIsEditing(false);
     }
   }
 

@@ -21,10 +21,19 @@ export async function PATCH(
         },
         userId: userId
       },
-      select: {
-        id: true
-      }
     });
+
+    const existingUserAnswers = userAnswers.map((userAnswer) => {
+      if (userAnswer.selectAnswer === null && userAnswer.textAnswer === null) {
+        return true;
+      } else {
+        false;
+      }
+    })
+
+    if (existingUserAnswers.find((q) => q === true)) {
+      return new NextResponse(JSON.stringify({ message: "全ての質問に回答または保存かされていません。" }), { status: 409 });
+    }
 
     // 該当するユーザー回答に対して isCompleted を true に更新
     if (userAnswers.length > 0) {
@@ -41,7 +50,6 @@ export async function PATCH(
     }
 
     return new NextResponse("Success", { status: 200 });
-
   } catch (error) {
     console.log("[USER_ANSWER_UPDATE_ERROR]", error);
     return new NextResponse("Internal Error", { status: 500 });
