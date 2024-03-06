@@ -153,7 +153,7 @@ const ApplicantForm = ({
         </div>
       )}
       <div className="flex flex-col max-w-4xl mx-auto pb-20">
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center p-4">
           <h1 className="text-4xl font-semibold">{title}</h1>
           <h2>申し込みフォーム</h2>
         </div>

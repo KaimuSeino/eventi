@@ -1,7 +1,9 @@
-import { getApplicantByEmailAndEventId } from "@/data/applicant";
+import { getApplicantByEmailAndEventId, getApplicantByUserIdAndEventId } from "@/data/applicant";
 import { getEventByEventId } from "@/data/event";
 import { getHostByEventId } from "@/data/host";
+import { getUserById } from "@/data/user";
 import ApplicantHostEmail from "@/emails/host/applicant-host-email";
+import ApplicantAttendanceEmail from "@/emails/user/applicant-attendace-email";
 import ApplicantEmail from "@/emails/user/applicant-email";
 import { db } from "@/lib/db";
 import { auth, currentUser } from "@clerk/nextjs";
@@ -32,13 +34,13 @@ export async function POST(
     const event = await getEventByEventId(params.eventId);
 
     if (!event) {
-      return new NextResponse("not found", { status: 404 }) // 書き方わかんない
+      return new NextResponse("not found", { status: 404 })
     }
 
     const host = await getHostByEventId(params.eventId);
 
     if (!host) {
-      return new NextResponse("not found", { status: 404 }) // 書き方わかんない
+      return new NextResponse("not found", { status: 404 })
     }
 
     const applicant = await db.applicant.create({
@@ -78,5 +80,55 @@ export async function POST(
   } catch (error) {
     console.log("APPLICANT", error);
     return new NextResponse(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
+  }
+}
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: { eventId: string } }
+) {
+  try {
+    const { userId } = await req.json();
+
+    const event = await getEventByEventId(params.eventId);
+    if (!event) {
+      return new NextResponse("not found", { status: 404 })
+    }
+
+    const host = await getHostByEventId(params.eventId);
+    if (!host) {
+      return new NextResponse("not found", { status: 404 })
+    }
+
+    const applicant = await getApplicantByUserIdAndEventId(userId, params.eventId);
+    if (!applicant) {
+      return new NextResponse("not found", { status: 404 })
+    }
+
+    const attendanceApplicant = await db.applicant.updateMany({
+      where: { userId: userId, eventId: params.eventId },
+      data: {
+        isAttendance: true
+      }
+    });
+
+    await resend.emails.send({
+      from: "Eventi <onboarding@eventi.jp>",
+      to: applicant.email,
+      subject: "[Eventiアンケートに答えましょう]",
+      react: ApplicantAttendanceEmail({
+        image: event.imageUrl!,
+        name: applicant.name,
+        eventTitle: event.title,
+        campany: host.campany!,
+        eventId: event.id
+      }),
+    })
+
+
+    return NextResponse.json(attendanceApplicant);
+  } catch (error) {
+    console.log("ATTENDANCE", error);
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }

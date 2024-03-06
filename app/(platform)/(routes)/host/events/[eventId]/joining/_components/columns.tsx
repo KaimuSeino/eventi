@@ -125,12 +125,14 @@ export const columns: ColumnDef<Applicant>[] = [
     cell: ({ row }) => {
       const userId = row.original.userId;
       const eventId = row.original.eventId;
+      const isAttendance = row.original.isAttendance;
 
       return (
         <>
           <AttendanceConfirmationButton
             eventId={eventId}
             userId={userId}
+            isAttendance={isAttendance}
           />
         </>
       )
