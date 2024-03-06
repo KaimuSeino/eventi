@@ -60,7 +60,7 @@ export default function ApplicantAttendanceEmail({
             Eventi履歴書アンケートに答える
           </Text>
           <Section style={btnContainer}>
-            <Button style={button} href={`"https://eventi.jp/events/${eventId}"`}>
+            <Button style={button} href={`https://eventi.jp/events/${eventId}`}>
               回答へ移動
             </Button>
           </Section>
