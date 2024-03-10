@@ -1,15 +1,18 @@
+import Footer from "./_components/footer";
+import Header from "./_components/header";
 
-
-const LPLayout = ({
+const HomePageLayout = ({
   children
 }: {
   children: React.ReactNode
 }) => {
   return (
-    <div className="overflow-y-hidden">
+    <div>
+      <Header />
       {children}
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default LPLayout
+export default HomePageLayout;

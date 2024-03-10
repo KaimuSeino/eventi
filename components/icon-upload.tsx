@@ -13,7 +13,7 @@ interface IconUploadProps {
 export const IconUpload = ({
   onChange,
   endpoint
-}: IconUploadProps) => {
+}: IconUploadProps) => {// Failed to run middleware
   return (
     <UploadButton
       endpoint={endpoint}
