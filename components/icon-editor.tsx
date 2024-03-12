@@ -1,47 +1,66 @@
-import { useCallback, useRef, useState } from "react";
-import AvatarEditor from "react-avatar-editor";
-import pica from "pica"
+import React, { useCallback, useRef, useState } from 'react';
+import AvatarEditor from 'react-avatar-editor';
 import Modal from 'react-modal';
-import Image from "next/image";
-import Slider from "rc-slider/lib/Slider";
+import Image from 'next/image';
+import Slider from 'rc-slider/lib/Slider';
+import pica from 'pica';
 import 'rc-slider/assets/index.css';
+import { useUploadThing } from "@/lib/uploadthing";
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
 
-interface IconEditorProps {
+const formSchema = z.object({
+  image: z.string()
+})
+
+interface Props {
   previewIcon: File | null;
   onChangePreviewIcon: (iconFile: File | null) => void;
-  onChangeIcon: (iconFile: File | null) => void;
+  onChangeIcon: (iconFile: File) => void;
+  onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>;
 }
 
-const ICON_WIDTH = 180 as const;
-const ICON_HEIGHT = 180 as const;
+const ICON_WIDTH = 160 as const;
+const ICON_HEIGHT = 160 as const;
 
-export const IconEditor = ({
-  previewIcon,
-  onChangePreviewIcon,
-  onChangeIcon,
-}: IconEditorProps) => {
+export const IconEditor: React.FC<Props> = (props: Props) => {
+  const { previewIcon, onChangeIcon, onChangePreviewIcon, onSubmit } = props;
   const editorRef = useRef<AvatarEditor | null>(null);
   const [scale, setScale] = useState(1);
 
+  const [uploading, isUploading] = useState(false)
+
+  const { startUpload } = useUploadThing("iconImage", {
+    onClientUploadComplete: (res) => {
+      console.log("startUpload")
+      // アップロードが完了したら、得られたURLでonSubmitを呼び出す
+      const uploadedImageUrl = res?.[0].url;
+      onSubmit({ image: uploadedImageUrl });
+    },
+  });
+
   const handleClickFileSave = useCallback(async () => {
     if (!editorRef.current) return;
+    isUploading(true)
 
     const img = editorRef.current.getImage();
     const canvas = editorRef.current.getImageScaledToCanvas();
     canvas.width = ICON_WIDTH;
     canvas.height = ICON_HEIGHT;
-    const picaCanvas = await pica().resize(img, canvas, { alpha: true })
+    const picaCanvas = await pica().resize(img, canvas, { alpha: true });
 
-    picaCanvas.toBlob((blob) => {
-      console.log(blob)
+    picaCanvas.toBlob(async (blob) => {
       const nextFile = new File([blob!], previewIcon?.name!, {
         type: previewIcon?.type,
         lastModified: Date.now(),
       });
-      onChangeIcon(nextFile);
+      // ここで startUploadを呼び出し、アップロードを開始する
+      await startUpload([nextFile])
       handleCloseIsOpen();
+      isUploading(false)
     });
-  }, [previewIcon, onChangeIcon])
+
+  }, [previewIcon, onChangeIcon]);
 
   const handleCloseIsOpen = useCallback(() => {
     onChangePreviewIcon(null);
@@ -57,14 +76,14 @@ export const IconEditor = ({
       onRequestClose={handleCloseIsOpen}
       ariaHideApp={false}
       overlayClassName={{
-        base: 'overlayBase', // 基本のクラス
-        afterOpen: 'overlayAfter', // モーダルが開いた後に適用されるクラス
-        beforeClose: 'overlayBefore' // モーダルが閉じる前に適用されるクラス
+        base: "overlayBase",
+        afterOpen: "overlayAfter",
+        beforeClose: "overlayBefore",
       }}
       className={{
-        base: 'contentBase', // 基本のクラス
-        afterOpen: 'contentAfter', // コンテンツが表示された後に適用されるクラス
-        beforeClose: 'contentBefore' // コンテンツが閉じる前に適用されるクラス
+        base: "contentBase",
+        afterOpen: "contentAfter",
+        beforeClose: "contentBefore",
       }}
       closeTimeoutMS={500}
     >
@@ -74,7 +93,7 @@ export const IconEditor = ({
             width={48}
             height={48}
             src="/close.svg"
-            alt="アイコン編集を閉じる"
+            alt="アイコン編集閉じる"
           />
         </button>
       </div>
@@ -86,7 +105,7 @@ export const IconEditor = ({
             width={ICON_WIDTH}
             height={ICON_HEIGHT}
             borderRadius={100}
-            color={[255, 255, 255, 0.6]}
+            color={[255, 255, 255, 0.8]}
             scale={scale}
             rotate={0}
           />
@@ -94,18 +113,16 @@ export const IconEditor = ({
             <Slider
               onChange={handleChangeScale}
               min={1}
-              max={1.5}
+              max={5}
               step={0.01}
               defaultValue={1}
             />
           </div>
           <div className="flex justify-center pt-[30px]">
-            <button type="button" onClick={handleClickFileSave} className="cursor-pointer">
-              確定
-            </button>
+            <Button disabled={uploading} type="button" onClick={handleClickFileSave}>保存する</Button>
           </div>
         </div>
       </div>
     </Modal>
-  )
-}
+  );
+};

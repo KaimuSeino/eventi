@@ -1,6 +1,7 @@
 import { isHost } from "@/lib/host";
 import { auth } from "@clerk/nextjs";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { UploadThingError } from "uploadthing/server"; // UploadThingErrorをインポート
 
 const f = createUploadthing();
 
@@ -8,7 +9,14 @@ const handleAuth = () => {
   const { userId } = auth();
   const isAuthorized = isHost(userId);
 
-  if (!userId || !isAuthorized) throw new Error("Unauthorized");
+  if (!userId || !isAuthorized) throw new UploadThingError("Unauthorized");
+  return { userId };
+}
+
+const handleUserOnlyAuth = () => {
+  const { userId } = auth();
+
+  if (!userId) throw new UploadThingError("Unauthorized");
   return { userId };
 }
 
@@ -23,7 +31,7 @@ export const ourFileRouter = {
     .middleware(() => handleAuth())
     .onUploadComplete(() => { }),
   iconImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
-    .middleware(() => handleAuth())
+    .middleware(() => handleUserOnlyAuth())
     .onUploadComplete(() => { })
 } satisfies FileRouter;
 
