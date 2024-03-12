@@ -1,7 +1,7 @@
 "use client";
 
 import Container from "../_components/container";
-import Fadein from "../_components/fadein";
+import Fadein from "../../../components/fadein";
 import Title from "../_components/title";
 
 const AboutPage = () => {

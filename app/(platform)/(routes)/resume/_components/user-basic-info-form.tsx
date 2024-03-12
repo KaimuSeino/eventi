@@ -16,6 +16,7 @@ import { z } from "zod";
 import UserNameAndEmail from "./user-name-and-email";
 import UserSchool from "./user-school";
 import UserIconImageForm from "./user-icon-image-form";
+import Fadein from "@/components/fadein";
 
 interface UserBasicInfoProps {
   user: User | null;
@@ -68,182 +69,146 @@ const UserBasicInfo = ({
     }
   }
 
-  const createUserProfile = async () => {
-    try {
-      await axios.post(`/api/user`);
-      toast.success("プロフィールが作成されました！");
-      router.refresh();
-    } catch (error) {
-      toast.error('問題が発生しました');
-    }
-  };
-
-
   return (
     <>
       <p className="text-lg font-extrabold">基本情報</p>
       <div className="mt-4 border bg-slate-100 rounded-md p-4">
         <div className="font-medium flex items-center justify-between">
           姓名・メールアドレス
-          {user ? (
-            <div>
-              <Button onClick={toggleEdit} variant="ghost">
-                {isEditing ? (
-                  <>キャンセル</>
-                ) : (
-                  <>
-                    <Pencil className="h-4 w-4 mr-2" />
-                    編集
-                  </>
-                )}
-              </Button>
-            </div>
-          ) : (
-            <div>
-              <Button onClick={createUserProfile} variant="ghost">
-                プロフィール作成
-              </Button>
-            </div>
-          )}
+          <div>
+            <Button onClick={toggleEdit} variant="ghost">
+              {isEditing ? (
+                <>キャンセル</>
+              ) : (
+                <>
+                  <Pencil className="h-4 w-4 mr-2" />
+                  編集
+                </>
+              )}
+            </Button>
+          </div>
         </div>
         <Separator className="mb-4" />
         {!isEditing && (
-          <div className="font-medium flex flex-col items-center">
-            <UserNameAndEmail
-              firstName={user?.firstName!}
-              katakanaFirstName={user?.katakanaFirstName!}
-              lastName={user?.lastName!}
-              katakanaLastName={user?.katakanaLastName!}
-              image={user?.image!}
-              email={user?.email!}
-            />
-            <UserSchool
-              school={user?.school!}
-              faculty={user?.faculty!}
-              grade={user?.grade!}
-            />
-          </div>
+          <Fadein>
+            <div className="font-medium flex flex-col items-center">
+              <UserNameAndEmail
+                firstName={user?.firstName!}
+                katakanaFirstName={user?.katakanaFirstName!}
+                lastName={user?.lastName!}
+                katakanaLastName={user?.katakanaLastName!}
+                image={user?.image!}
+                email={user?.email!}
+              />
+              <UserSchool
+                school={user?.school!}
+                faculty={user?.faculty!}
+                grade={user?.grade!}
+              />
+            </div>
+          </Fadein>
         )}
         {isEditing && (
-          <div>
-            <UserIconImageForm user={user} />
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4 mt-4"
-              >
-                {/* 漢字 */}
-                <div className="flex items-center md:justify-around gap-x-3">
-                  <div className="w-full p-2">
-                    <FormField
-                      control={form.control}
-                      name="lastName"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col justify-center gap-x-2">
-                          <FormLabel>性</FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled={isSubmitting}
-                              placeholder="性"
-                              {...field}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+          <Fadein>
+            <div>
+              <UserIconImageForm user={user} />
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-4 mt-4"
+                >
+                  {/* 漢字 */}
+                  <div className="flex items-center md:justify-around gap-x-3">
+                    <div className="w-full p-2">
+                      <FormField
+                        control={form.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col justify-center gap-x-2">
+                            <FormLabel>性</FormLabel>
+                            <FormControl>
+                              <Input
+                                disabled={isSubmitting}
+                                placeholder="性"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="w-full p-2">
+                      <FormField
+                        control={form.control}
+                        name="firstName"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col justify-center gap-x-3">
+                            <FormLabel>
+                              名
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                disabled={isSubmitting}
+                                placeholder="名"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full p-2">
-                    <FormField
-                      control={form.control}
-                      name="firstName"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col justify-center gap-x-3">
-                          <FormLabel>
-                            名
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled={isSubmitting}
-                              placeholder="名"
-                              {...field}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+                  {/* カタカナ */}
+                  <div className="flex items-center justify-around gap-x-3">
+                    <div className="w-full p-2">
+                      <FormField
+                        control={form.control}
+                        name="katakanaLastName"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col justify-center gap-x-2">
+                            <FormLabel>セイ</FormLabel>
+                            <FormControl>
+                              <Input
+                                disabled={isSubmitting}
+                                placeholder="セイ"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="w-full p-2">
+                      <FormField
+                        control={form.control}
+                        name="katakanaFirstName"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col justify-center gap-x-3">
+                            <FormLabel className="w-auto">メイ</FormLabel>
+                            <FormControl>
+                              <Input
+                                disabled={isSubmitting}
+                                placeholder="メイ"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
-                </div>
-                {/* カタカナ */}
-                <div className="flex items-center justify-around gap-x-3">
-                  <div className="w-full p-2">
+                  {/* メールアドレス */}
+                  <div className="p-2">
                     <FormField
                       control={form.control}
-                      name="katakanaLastName"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col justify-center gap-x-2">
-                          <FormLabel>セイ</FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled={isSubmitting}
-                              placeholder="セイ"
-                              {...field}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="w-full p-2">
-                    <FormField
-                      control={form.control}
-                      name="katakanaFirstName"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col justify-center gap-x-3">
-                          <FormLabel className="w-auto">メイ</FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled={isSubmitting}
-                              placeholder="メイ"
-                              {...field}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-                {/* メールアドレス */}
-                <div className="p-2">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-x-3">
-                        <FormLabel className="w-full">メールアドレス</FormLabel>
-                        <FormControl>
-                          <Input
-                            disabled={true}
-                            placeholder="eventi@example.com"
-                            {...field}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                {/* 学校 */}
-                <div className="flex flex-col items-center justify-around gap-x-3">
-                  <div className="w-full p-2">
-                    <FormField
-                      control={form.control}
-                      name="school"
+                      name="email"
                       render={({ field }) => (
                         <FormItem className="flex items-center gap-x-3">
-                          <FormLabel className="w-16">大学名</FormLabel>
+                          <FormLabel className="w-full">メールアドレス</FormLabel>
                           <FormControl>
                             <Input
-                              disabled={isSubmitting}
-                              placeholder="大学名"
+                              disabled={true}
+                              placeholder="eventi@example.com"
                               {...field}
                             />
                           </FormControl>
@@ -251,58 +216,79 @@ const UserBasicInfo = ({
                       )}
                     />
                   </div>
-                  <div className="w-full p-2">
-                    <FormField
-                      control={form.control}
-                      name="faculty"
-                      render={({ field }) => (
-                        <FormItem className="flex items-center gap-x-3">
-                          <FormLabel className="w-16">
-                            学部
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled={isSubmitting}
-                              placeholder="学部"
-                              {...field}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+                  {/* 学校 */}
+                  <div className="flex flex-col items-center justify-around gap-x-3">
+                    <div className="w-full p-2">
+                      <FormField
+                        control={form.control}
+                        name="school"
+                        render={({ field }) => (
+                          <FormItem className="flex items-center gap-x-3">
+                            <FormLabel className="w-16">大学名</FormLabel>
+                            <FormControl>
+                              <Input
+                                disabled={isSubmitting}
+                                placeholder="大学名"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="w-full p-2">
+                      <FormField
+                        control={form.control}
+                        name="faculty"
+                        render={({ field }) => (
+                          <FormItem className="flex items-center gap-x-3">
+                            <FormLabel className="w-16">
+                              学部
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                disabled={isSubmitting}
+                                placeholder="学部"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="w-full p-2">
+                      <FormField
+                        control={form.control}
+                        name="grade"
+                        render={({ field }) => (
+                          <FormItem className="flex items-center gap-x-3">
+                            <FormLabel className="w-16">
+                              学年
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                disabled={isSubmitting}
+                                placeholder="学年"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full p-2">
-                    <FormField
-                      control={form.control}
-                      name="grade"
-                      render={({ field }) => (
-                        <FormItem className="flex items-center gap-x-3">
-                          <FormLabel className="w-16">
-                            学年
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled={isSubmitting}
-                              placeholder="学年"
-                              {...field}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+                  <div className="flex items-center justify-end gap-x-2">
+                    <Button
+                      disabled={!isValid || isSubmitting}
+                      type="submit"
+                    >
+                      保存
+                    </Button>
                   </div>
-                </div>
-                <div className="flex items-center justify-end gap-x-2">
-                  <Button
-                    disabled={!isValid || isSubmitting}
-                    type="submit"
-                  >
-                    保存
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </div>
+                </form>
+              </Form>
+            </div>
+          </Fadein>
         )}
       </div>
     </>

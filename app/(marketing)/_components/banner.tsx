@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Container from "./container";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import Fadein from "./fadein";
+import Fadein from "../../../components/fadein";
 import Link from "next/link";
 
 const Banner = () => {

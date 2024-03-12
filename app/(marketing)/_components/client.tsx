@@ -9,7 +9,7 @@ import logo6 from "@/public/clientImg/6.svg"
 import logo7 from "@/public/clientImg/7.svg"
 import logo8 from "@/public/clientImg/8.svg"
 import Container from "./container"
-import FadeIn, { FadeInStagger } from "./fadein";
+import FadeIn, { FadeInStagger } from "../../../components/fadein";
 import Image from "next/image"
 
 const clients = [
