@@ -25,20 +25,16 @@ const UserNameAndEmail = ({
           <AvatarImage src={image} />
         </Avatar>
       </div>
-      <div className="flex my-2 gap-x-2">
+      <div className="flex flex-col justify-center items-center my-2 gap-x-2">
         {/* 名前などの基本情報 */}
         <div>
-          姓：
-          <span className="font-bold">
-            {!lastName ? "未入力" : lastName}
-            ({!katakanaLastName ? "未入力" : katakanaLastName})
+          <span className="font-bold text-xl">
+            {!lastName ? "未入力" : lastName} {!firstName ? "未入力" : firstName}
           </span>
         </div>
         <div>
-          名：
-          <span className="font-bold">
-            {!firstName ? "未入力" : firstName}
-            ({!katakanaFirstName ? "未入力" : katakanaFirstName})
+          <span className="text-sm">
+            {katakanaLastName} {katakanaFirstName}
           </span>
         </div>
       </div>
