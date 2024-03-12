@@ -2,7 +2,6 @@
 
 import * as z from "zod"
 import { IconEditor } from "@/components/icon-editor";
-import { IconUpload } from "@/components/icon-upload";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Host } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -10,6 +9,7 @@ import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
 
 interface IconImageFormProps {
   host: Host
@@ -65,12 +65,18 @@ const IconImageForm = ({
     <>
       <div className="flex flex-row items-center">
         <Avatar>
-          <AvatarImage src={icon ? URL.createObjectURL(icon) : host?.image ? host.image : ''} />
+          <AvatarImage src={host?.image || ""} />
           <AvatarFallback className="bg-yellow-500">
             <FaUser className="h-10 w-10 text-white" />
           </AvatarFallback>
         </Avatar>
         <div className="p-2">
+          <Button
+            type="button"
+            onClick={handleClickChangeIcon}
+          >
+            アイコン編集
+          </Button>
           <input
             type="file"
             accept="image/*"
@@ -78,24 +84,13 @@ const IconImageForm = ({
             ref={iconInputRef}
             onChange={handleChangePreviewIcon}
           />
-          {/* <Button onClick={handleClickChangeIcon} variant="ghost">
-            画像を変更する
-          </Button> */}
-          <IconUpload
-            endpoint="iconImage"
-            onChange={(url) => {
-
-              if (url) {
-                onSubmit({ image: url })
-              }
-            }}
-          />
 
         </div>
         <IconEditor
           previewIcon={previewIcon}
           onChangePreviewIcon={setPreviewIcon}
           onChangeIcon={handleChangeIcon}
+          onSubmit={onSubmit}
         />
       </div>
     </>

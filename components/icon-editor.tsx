@@ -60,7 +60,7 @@ export const IconEditor: React.FC<Props> = (props: Props) => {
       isUploading(false)
     });
 
-  }, [previewIcon, onChangeIcon]);
+  }, [previewIcon, startUpload]);
 
   const handleCloseIsOpen = useCallback(() => {
     onChangePreviewIcon(null);
