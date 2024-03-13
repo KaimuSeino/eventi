@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import ApplicantForm from "./_components/applicant-form";
 import { getUserById } from "@/data/user";
+import Footer from "@/components/footer";
 
 const ApplicationFormPage = async ({
   params
@@ -22,18 +23,24 @@ const ApplicationFormPage = async ({
     <>
       {
         event ? (
-          <ApplicantForm
-            eventId={params.eventId}
-            user={user!}
-            userId={userId}
-            title={event.title}
-          />
+          <>
+            <ApplicantForm
+              eventId={params.eventId}
+              user={user!}
+              userId={userId}
+              title={event.title}
+            />
+            <Footer />
+          </>
         ) : (
-          <div className="flex flex-col max-w-4xl mx-auto pb-20">
-            <div>
-              情報が取得されませんでした。
+          <>
+            <div className="flex flex-col max-w-4xl mx-auto pb-20">
+              <div>
+                情報が取得されませんでした。
+              </div >
             </div >
-          </div >
+            <Footer />
+          </>
         )}
     </>
   )

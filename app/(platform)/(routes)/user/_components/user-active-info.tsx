@@ -2,14 +2,18 @@ import React from 'react';
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import Image from 'next/image';
+import { Host } from '@prisma/client';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 interface EventUserInfo {
+  id: string;
   title: string;
   description: string;
   imageUrl: string;
   startDatetime: string;
   endDatetime: string;
   eventId: string;
+  host: Host | null;
   surveys: {
     surveyId: string;
     question: string;
@@ -70,6 +74,15 @@ const UserActiveInfo = (
                   </Link>
                 </div>
                 <p className="text-sm pl-2 md:pt-4 text-slate-700">{event.description}</p>
+                <div className="flex mt-4 items-center gap-x-2 text-sm md:text-xs">
+                  <p className='text-base font-normal text-slate-900'>主催：</p>
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={event.host?.image!} />
+                  </Avatar>
+                  <p className='text-base font-medium'>
+                    {event.host?.campany}
+                  </p>
+                </div>
               </div>
             </div>
 

@@ -8,7 +8,7 @@ import logo5 from "@/public/clientImg/5.svg"
 import logo6 from "@/public/clientImg/6.svg"
 import logo7 from "@/public/clientImg/7.svg"
 import logo8 from "@/public/clientImg/8.svg"
-import Container from "./container"
+import Container from "../../../components/container"
 import FadeIn, { FadeInStagger } from "../../../components/fadein";
 import Image from "next/image"
 

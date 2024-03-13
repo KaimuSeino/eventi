@@ -44,7 +44,7 @@ export const MyPageRoute = ({
   const router = useRouter();
 
   const onClick = () => {
-    router.push("/resume");
+    router.push("/user");
   }
 
   return (

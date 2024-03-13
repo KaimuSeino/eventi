@@ -1,6 +1,7 @@
 import ToasterProvider from "@/components/providers/ToasterProvider";
 import Navbar from "./_components/Navbar";
 import Sidebar from "./_components/Sidebar";
+import Footer from "@/components/footer";
 
 const DashboardLayout = ({
   children

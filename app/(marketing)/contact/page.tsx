@@ -1,6 +1,6 @@
 "use client"
 
-import Container from "../_components/container";
+import Container from "../../../components/container";
 import Fadein from "../../../components/fadein";
 import Title from "../_components/title";
 

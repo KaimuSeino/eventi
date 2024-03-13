@@ -5,6 +5,7 @@ import { columns } from "./_components/columns"
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
+import Footer from "@/components/footer";
 
 const EventsPage = async () => {
 
@@ -24,16 +25,19 @@ const EventsPage = async () => {
   })
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <Link href="/host/create">
-          <Button>
-            新規イベント作成
-          </Button>
-        </Link>
+    <>
+      <div className="p-6">
+        <div className="mb-6">
+          <Link href="/host/create">
+            <Button>
+              新規イベント作成
+            </Button>
+          </Link>
+        </div>
+        <DataTable columns={columns} data={events} />
       </div>
-      <DataTable columns={columns} data={events} />
-    </div>
+      <Footer />
+    </>
   );
 }
 

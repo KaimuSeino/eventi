@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import Container from "./container";
+import Container from "../../../components/container";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Fadein from "../../../components/fadein";

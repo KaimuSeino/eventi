@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { SearchInput } from "@/components/SearchInput";
 import { getEvents } from "@/actions/get-events";
 import EventsList from "./_components/events-list";
-
+import Footer from "@/components/footer";
 
 interface SearchPageProps {
   searchParams: {
@@ -31,10 +31,8 @@ const SearchPage = async ({
   });
 
   const events = await getEvents({
-    userId,
     ...searchParams
   })
-
 
   return (
     <>
@@ -49,6 +47,7 @@ const SearchPage = async ({
           items={events}
         />
       </div>
+      <Footer />
     </>
   );
 }

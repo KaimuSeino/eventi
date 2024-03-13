@@ -1,4 +1,4 @@
-import { Category, Event } from "@prisma/client";
+import { Category, Event, Host } from "@prisma/client";
 
 import { db } from "@/lib/db";
 
@@ -7,13 +7,11 @@ type EventsWithSomething = Event & {
 }
 
 type GetEvents = {
-  userId: string;
   title: string;
   categoryId: string;
 }
 
 export const getEvents = async ({
-  userId,
   title,
   categoryId,
 }: GetEvents): Promise<EventsWithSomething[]> => {
@@ -27,7 +25,7 @@ export const getEvents = async ({
         categoryId
       },
       include: {
-        category: true
+        category: true,
       },
       orderBy: {
         createdAt: "desc"
