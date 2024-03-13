@@ -27,7 +27,7 @@ const SurveyCompletedButton = ({
     try {
       await axios.patch(`/api/events/${eventId}/surveys`)
       toast.success("あなたの活動が履歴に残りました")
-      router.push(`/resume`)
+      router.push(`/user`)
       router.refresh()
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

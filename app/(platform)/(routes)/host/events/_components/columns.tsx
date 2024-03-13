@@ -20,6 +20,7 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { format, isValid } from "date-fns"
+import { ja } from 'date-fns/locale';
 
 export const columns: ColumnDef<Event>[] = [
   {
@@ -37,27 +38,16 @@ export const columns: ColumnDef<Event>[] = [
     },
   },
   {
-    accessorKey: "datetime",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          日程
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      const datetime: string | null | undefined = row.getValue("datetime");
-      // datetime が null または undefined でないことを確認
-      if (datetime) {
-        const formattedDate = format(new Date(datetime), "yyyy-MM-dd");
-        return <span>{formattedDate}</span>;
-      }
-
-      return <span>日程が設定されていません</span>;
+    accessorFn: (row) => `${row.startDatetime} - ${row.endDatetime}`,
+    header: '日程',
+    cell: ({ getValue }) => {
+      const dateRange = getValue() as string;
+      const [startDatetime, endDatetime] = dateRange.split(' - ');
+      const startDate = new Date(startDatetime);
+      const endDate = new Date(endDatetime);
+      const formattedStartDate = isValid(startDate) ? format(startDate, "yyyy-MM-dd") : '未定';
+      const formattedEndDate = isValid(endDate) ? format(endDate, "yyyy-MM-dd") : '未定';
+      return <span>{`${formattedStartDate}〜${formattedEndDate}`}</span>;
     }
   },
   {
