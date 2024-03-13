@@ -18,7 +18,7 @@ const guestRoutes = [
   {
     icon: User,
     label: "マイページ",
-    href: "/resume",
+    href: "/user",
   }
 ]
 
