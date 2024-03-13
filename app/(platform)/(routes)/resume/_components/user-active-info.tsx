@@ -7,7 +7,8 @@ interface EventUserInfo {
   title: string;
   description: string;
   imageUrl: string;
-  datetime: string;
+  startDatetime: string;
+  endDatetime: string;
   eventId: string;
   surveys: {
     surveyId: string;
@@ -31,7 +32,7 @@ const UserActiveInfo = (
 ) => {
 
   // イベント情報を日付順に並べ替え
-  const sortedEventInfo = eventUserInfo?.sort((a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime());
+  const sortedEventInfo = eventUserInfo?.sort((a, b) => new Date(b.startDatetime).getTime() - new Date(a.startDatetime).getTime());
 
   const completedEvents = sortedEventInfo?.filter(event =>
     isCompleted?.some(comp => comp.eventId === event.eventId && comp.isCompleted)
@@ -47,7 +48,7 @@ const UserActiveInfo = (
           <div key={index} className="mb-6 border rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
               <div className="w-full">
-                {new Date(event.datetime).toLocaleDateString()} {/* 日付を表示 */}
+                {new Date(event.startDatetime).toLocaleDateString()} 〜 {new Date(event.endDatetime).toLocaleDateString()} {/* 日付を表示 */}
                 <Separator />
               </div>
             </div>

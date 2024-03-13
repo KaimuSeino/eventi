@@ -8,7 +8,8 @@ interface EventCardProps {
   title: string;
   description: string;
   imageUrl: string;
-  datetime: Date;
+  startDatetime: Date;
+  endDatetime: Date;
   category: string;
 }
 
@@ -17,10 +18,12 @@ export const EventCard = ({
   title,
   description,
   imageUrl,
-  datetime,
+  startDatetime,
+  endDatetime,
   category,
 }: EventCardProps) => {
-  const formattedDate = datetime.toLocaleDateString("ja-JP");
+  const formattedStartDate = startDatetime?.toLocaleDateString("ja-JP");
+  const formattedEndDate = endDatetime?.toLocaleDateString("ja-JP");
 
   return (
     <Link href={`/events/${id}`}>
@@ -47,7 +50,7 @@ export const EventCard = ({
             <div className="flex items-center gap-x-1 text-slate-500">
               <IconBadge size="success" icon={Calendar} />
               <span>
-                日程：{formattedDate}
+                日程：{formattedStartDate}〜{formattedEndDate}
               </span>
             </div>
           </div>

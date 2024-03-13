@@ -13,7 +13,7 @@ import { getSurvey } from "@/actions/get-surveys";
 import CreateUserSurveyFormButton from "./_components/create-user-survey-form-button";
 import { getUserSurveys } from "@/actions/get-user-surveys";
 import { getUser } from "@/actions/get-user";
-import { getHostByEventId, getHostById } from "@/data/host";
+import { getHostByEventId } from "@/data/host";
 import EventHost from "./_components/event-host";
 import { getApplicantByUserIdAndEventId } from "@/data/applicant";
 
@@ -58,7 +58,8 @@ const EventIdPage = async ({
     survey.userAnswer?.every(answer => answer.isCompleted)
   );
 
-  const date = event?.datetime?.toLocaleDateString("ja-JP");
+  const startDate = event?.startDatetime?.toLocaleDateString("ja-JP");
+  const endDate = event?.endDatetime?.toLocaleDateString("ja-JP");
 
   // event が null でない場合のみ、その内容を表示する
   if (event) {
@@ -127,7 +128,7 @@ const EventIdPage = async ({
               <div className="flex items-center gap-x-1 text-slate-500">
                 <IconBadge size="success" icon={Calendar} />
                 <span>
-                  日程：{date}
+                  日程：{startDate}〜{endDate}
                 </span>
               </div>
             </div>

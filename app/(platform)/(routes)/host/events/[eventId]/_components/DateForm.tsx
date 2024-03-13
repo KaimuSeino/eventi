@@ -11,10 +11,11 @@ import { useState } from "react"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { Textarea } from "@/components/ui/textarea"
 import { Event } from "@prisma/client"
-import { DatePicker } from "@/components/ui/datepicker"
+import { DatePickerWithRange } from "@/components/ui/datepicker"
 import { format } from "date-fns";
+import { ja } from 'date-fns/locale';
+import { DateRange } from "react-day-picker";
 
 interface DateFormProps {
   initialData: Event
@@ -22,8 +23,11 @@ interface DateFormProps {
 }
 
 const formSchema = z.object({
-  datetime: z.date({
-    required_error: "日付を選んでください"
+  dateRange: z.object({
+    from: z.date(),
+    to: z.date(),
+  }).refine((data) => data.from <= data.to, {
+    message: "開始日は終了日より前でなければなりません。",
   })
 })
 
@@ -40,17 +44,21 @@ const DateForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      datetime: initialData?.datetime || undefined
+      dateRange: {
+        from: initialData?.startDatetime || undefined,
+        to: initialData?.endDatetime || undefined, // endDatetime はイベントの終了日を想定
+      }
     }
   })
 
   const { isSubmitting, isValid } = form.formState
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const formattedDate = format(values.datetime, "yyyy-MM-dd'T'00:00:00.000'Z'");
+    const formattedStartDate = format(values.dateRange.from, "yyyy-MM-dd'T'00:00:00.000'Z'");
+    const formattedEndDate = format(values.dateRange.to, "yyyy-MM-dd'T'00:00:00.000'Z'");
 
     try {
-      await axios.patch(`/api/events/${eventId}`, { datetime: formattedDate })
+      await axios.patch(`/api/events/${eventId}`, { startDatetime: formattedStartDate, endDatetime: formattedEndDate })
       console.log(values)
       toast.success("更新されました！")
       toggleEdit()
@@ -78,9 +86,11 @@ const DateForm = ({
       {!isEditing && (
         <p className={cn(
           "text-sm mt-2",
-          !initialData.datetime && "text-slate-500 italic"
+          !initialData.startDatetime && "text-slate-500 italic"
         )}>
-          {initialData.datetime ? format(initialData.datetime, "yyyy-MM-dd") : "日付を選択していません"}
+          {initialData.startDatetime && initialData.endDatetime ? (
+            `${format(new Date(initialData.startDatetime), "PPP", { locale: ja })} 〜 ${format(new Date(initialData.endDatetime), "PPP", { locale: ja })}`
+          ) : "日付を選択していません"}
         </p>
       )}
       {isEditing && (
@@ -91,14 +101,14 @@ const DateForm = ({
           >
             <FormField
               control={form.control}
-              name="datetime"
+              name="dateRange"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <DatePicker
+                    <DatePickerWithRange
                       value={field.value}
-                      onChange={(newValue) => {
-                        field.onChange(newValue)
+                      onChange={(newRange: DateRange) => {
+                        field.onChange(newRange)
                       }}
                     />
                   </FormControl>

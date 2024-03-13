@@ -37,7 +37,8 @@ const UserResumePage = async () => {
       title: event.title,
       description: event.description!,
       imageUrl: event.imageUrl!,
-      datetime: event.datetime! && new Date(event.datetime).toLocaleDateString(),
+      startDatetime: event.startDatetime! && new Date(event.startDatetime).toLocaleDateString(),
+      endDatetime: event.endDatetime! && new Date(event.endDatetime).toLocaleDateString(),
       eventId: event.id,
       surveys, // include the surveys data
     }

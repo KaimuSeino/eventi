@@ -22,7 +22,8 @@ const EventsList = ({
             title={item.title}
             description={item.description!}
             imageUrl={item.imageUrl!}
-            datetime={item.datetime!}
+            startDatetime={item.startDatetime!}
+            endDatetime={item.endDatetime!}
             category={item?.category?.name!}
           />
         ))}

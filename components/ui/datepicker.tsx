@@ -1,8 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { format } from "date-fns"
+import { format, addDays } from "date-fns"
+import { ja } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react"
+import { DateRange } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -13,22 +15,22 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-interface DatePickerProps {
-  value?: Date;
-  onChange: (value: Date) => void;
+interface DatePickerWithRangeProps {
+  value?: DateRange;
+  onChange: (value: DateRange) => void;
 }
 
-export function DatePicker({
+export function DatePickerWithRange({
   value,
   onChange,
-}: DatePickerProps) {
+}: DatePickerWithRangeProps) {
   const [open, setOpen] = React.useState(false)
 
-  const handleDateSelect = (newValue: Date | undefined) => {
+  const handleDateSelect = (newValue: DateRange | undefined) => {
     if (newValue) {
       onChange(newValue); // Date オブジェクトを渡す
     }
-    setOpen(false);
+    // setOpen(false);
   }
 
   return (
@@ -42,12 +44,17 @@ export function DatePicker({
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? format(value, "PPP") : <span>Pick a date</span>}
+          {value && value.from && value.to ? (
+            `${format(value.from, "PPP", { locale: ja })} - ${format(value.to, "PPP", { locale: ja })}`
+          ) : (
+            <span>日付を選択してください</span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
         <Calendar
-          mode="single"
+          mode="range"
+          locale={ja}
           selected={value}
           onSelect={handleDateSelect}
           initialFocus

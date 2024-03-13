@@ -56,7 +56,7 @@ const EventIdPage = async ({
     event.imageUrl,
     event.categoryId,
     event.detail,
-    event.datetime,
+    event.startDatetime,
     event.surveys.find((survey) => survey.question),
   ]
 
