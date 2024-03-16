@@ -1,5 +1,4 @@
 import { db } from "@/lib/db"
-import { isHost } from "@/lib/host";
 import { auth } from "@clerk/nextjs"
 import { NextResponse } from "next/server"
 
@@ -59,6 +58,7 @@ export async function PATCH(
       },
       data: {
         ...values,
+        experiences: JSON.stringify(values.experiences),
       }
     })
 

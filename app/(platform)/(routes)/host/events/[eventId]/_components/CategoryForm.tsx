@@ -60,7 +60,7 @@ const CategoryForm = ({
   return (
     <div className="mt-4 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        カテゴリー
+        メインカテゴリー
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
             <>キャンセル</>

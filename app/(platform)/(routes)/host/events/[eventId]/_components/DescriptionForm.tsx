@@ -4,7 +4,7 @@ import * as z from "zod"
 import axios from "axios"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
 import { Pencil } from "lucide-react"
 import { useState } from "react"
@@ -51,7 +51,7 @@ const DescriptionForm = ({
       toggleEdit()
       router.refresh()
     } catch (error) {
-      toast.error("何か問題起きちゃった！！")
+      toast.error("何か問題起きました")
     }
   }
 

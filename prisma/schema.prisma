@@ -42,6 +42,7 @@ model Event {
   description String? @db.Text
   imageUrl    String? @db.Text
   detail      String? @db.Text
+  experiences String? @default("[]")
 
   startDatetime DateTime? @db.Date
   endDatetime   DateTime? @db.Date

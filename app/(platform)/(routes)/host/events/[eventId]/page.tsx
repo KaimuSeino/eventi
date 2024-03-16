@@ -13,6 +13,9 @@ import { Banner } from "@/components/banner";
 import DateForm from "./_components/DateForm";
 import SurveyForm from "./_components/SurveyForm";
 import { getHostById } from "@/data/host";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import ExperienceForm from "./_components/experience-form";
 
 const EventIdPage = async ({
   params
@@ -94,12 +97,22 @@ const EventIdPage = async ({
               完了まで：({completionText})
             </span>
           </div>
-          <Actions
-            isHostComplete={isHostComplete}
-            disabled={!isComplete}
-            eventId={params.eventId}
-            isPublished={event.isPublished}
-          />
+          <div className="flex items-center gap-6">
+            <Button variant="secondary">
+              Comming Soon
+            </Button>
+            {/* <Link href={`/host/events/${params.eventId}/example`} target="_blank">
+              <Button variant="secondary">
+                例を見る
+              </Button>
+            </Link> */}
+            <Actions
+              isHostComplete={isHostComplete}
+              disabled={!isComplete}
+              eventId={params.eventId}
+              isPublished={event.isPublished}
+            />
+          </div>
         </div>
         {/* 詳細編集 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
@@ -133,6 +146,11 @@ const EventIdPage = async ({
                 label: category.name,
                 value: category.id,
               }))}
+            />
+            {/* 経験タグフォーム */}
+            <ExperienceForm
+              initialData={event}
+              eventId={event.id}
             />
             {/* 日程フォーム */}
             <DateForm
