@@ -1,7 +1,6 @@
 import { getApplicantByEmailAndEventId, getApplicantByUserIdAndEventId } from "@/data/applicant";
 import { getEventByEventId } from "@/data/event";
 import { getHostByEventId } from "@/data/host";
-import { getUserById } from "@/data/user";
 import ApplicantHostEmail from "@/emails/host/applicant-host-email";
 import ApplicantAttendanceEmail from "@/emails/user/applicant-attendace-email";
 import ApplicantEmail from "@/emails/user/applicant-email";

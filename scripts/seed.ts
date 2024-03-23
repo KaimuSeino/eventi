@@ -11,7 +11,7 @@ async function main() {
     })
     console.log("success!")
   } catch (error) {
-    console.log("シードデータでエラーが発生！", error);
+    console.log("シードデータでエラーが発生！", error)
   } finally {
     await database.$disconnect();
   }

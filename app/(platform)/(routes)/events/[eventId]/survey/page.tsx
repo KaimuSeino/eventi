@@ -7,7 +7,6 @@ import { getSurvey } from "@/actions/get-surveys";
 import { getUserSurveys } from "@/actions/get-user-surveys";
 import SurveyCompletedButton from "./_components/survey-completed.button";
 import Image from "next/image";
-import { getUserAnswerByEventId } from "@/data/userAnswer";
 import Footer from "@/components/footer";
 
 const SurveyPage = async ({

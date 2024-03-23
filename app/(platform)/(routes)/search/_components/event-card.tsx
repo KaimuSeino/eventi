@@ -48,7 +48,7 @@ export const EventCard = async ({
             {description}
           </p>
           <div className="flex items-center gap-x-2 text-sm md:text-xs">
-            <Avatar className="h-6 w-6">
+            <Avatar className="h-5 w-5">
               <AvatarImage src={host?.image!} />
             </Avatar>
             <p>{host?.campany}</p>
