@@ -5,6 +5,7 @@ import {
   FcCollaboration,
   FcBusinessman,
   FcSportsMode,
+  FcBusiness
 } from "react-icons/fc"
 import { IconType } from "react-icons"
 import { CategoryItem } from "./category-item"
@@ -14,6 +15,7 @@ interface CategoriesProps {
 }
 
 const iconMap: Record<Category["name"], IconType> = {
+  "インターンシップ": FcBusiness,
   "起業": FcSportsMode,
   "就職": FcBusinessman,
   "対談": FcCollaboration,
