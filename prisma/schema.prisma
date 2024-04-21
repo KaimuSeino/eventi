@@ -32,6 +32,7 @@ model Host {
   email   String? @unique
   detail  String? @db.Text
   image   String?
+  link    String?
 }
 
 model Event {
